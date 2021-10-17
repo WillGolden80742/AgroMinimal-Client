@@ -1,31 +1,57 @@
+-- phpMyAdmin SQL Dump
+-- version 5.1.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost
+-- Tempo de geração: 17/10/2021 às 21:17
+-- Versão do servidor: 10.4.21-MariaDB
+-- Versão do PHP: 8.0.10
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
-DELIMITER $$
 
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Banco de dados: `agroMinimal`
+--
+
+DELIMITER $$
+--
+-- Procedimentos
+--
 CREATE DEFINER=`root`@`localhost` PROCEDURE `contatos` (IN `userNickName` VARCHAR(20))  NO SQL
 select clientes.nickName as nickNameContato, clientes.nomeCliente AS Contato, messages.Messages, max(messages.date) as DateFormated FROM clientes INNER JOIN messages on messages .MsgFrom = clientes.nickName or messages.MsgTo = clientes.nickName WHERE (messages.MsgFrom = userNickName AND clientes.nickName != userNickName) OR  (messages.MsgTo = userNickName AND clientes.nickName != userNickName) GROUP BY Contato ORDER BY DateFormated DESC$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `contNotReceived` (IN `contactNickName` VARCHAR(20))  NO SQL
+SELECT COUNT(Idmessage) AS contMSg FROM messages WHERE messages.MsgFrom = contactNickName AND received = 0 OR messages.MsgFrom = contactNickName AND received = 2$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `countAnexos` (IN `nickName` VARCHAR(20), IN `contactNickName` VARCHAR(20))  NO SQL
-SELECT count(Messages.Idmessage) AS countAnexos From messages INNER JOIN anexo on anexo.mensagem = messages.Idmessage WHERE messages.MsgFrom = contactNickName AND Messages.MsgTo = nickName OR messages.MsgFrom = nickName AND Messages.MsgTo = contactNickName$$
+SELECT count(messages.Idmessage) AS countAnexos From messages INNER JOIN anexo on anexo.mensagem = messages.Idmessage WHERE messages.MsgFrom = contactNickName AND messages.MsgTo = nickName OR messages.MsgFrom = nickName AND messages.MsgTo = contactNickName$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `firstMessageWithAttachment` (IN `nickName` VARCHAR(20))  NO SQL
-SELECT Messages.Idmessage,Messages.Messages, Messages.MsgFrom,Messages.MsgTo, Messages.Date as dataOrd, DATE_FORMAT(messages.date, '%H:%i') as HourMsg FROM messages WHERE messages.MsgTo = nickName AND messages.received = 0 ORDER BY dataOrd DESC LIMIT 0,1$$
+SELECT messages.Idmessage,messages.Messages, messages.MsgFrom,messages.MsgTo, messages.Date as dataOrd, DATE_FORMAT(messages.date, '%H:%i') as HourMsg FROM messages WHERE messages.MsgTo = nickName AND messages.received = 0 ORDER BY dataOrd DESC LIMIT 0,1$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `messages` (IN `nickName` VARCHAR(20), IN `contactNickName` VARCHAR(20))  NO SQL
-SELECT *, DATE_FORMAT(messages.date, '%H:%i') as HourMsg From messages WHERE messages.MsgFrom = contactNickName AND Messages.MsgTo = nickName OR messages.MsgFrom = nickName AND Messages.MsgTo = contactNickName ORDER BY DATE_FORMAT(messages.date, '%d/%m/%Y %H:%i:%s') ASC$$
+SELECT *, DATE_FORMAT(messages.date, '%H:%i') as HourMsg From messages WHERE messages.MsgFrom = contactNickName AND messages.MsgTo = nickName OR messages.MsgFrom = nickName AND messages.MsgTo = contactNickName ORDER BY DATE_FORMAT(messages.date, '%d/%m/%Y %H:%i:%s') ASC$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `messagesWithAttachment` (IN `nickName` VARCHAR(20), IN `contactNickName` VARCHAR(20))  NO SQL
-SELECT Messages.Idmessage, "" as messages ,Messages.MsgFrom,"",Messages.Date as dataOrd, DATE_FORMAT(messages.date, '%H:%i') as HourMsg, anexo.nome AS NomeArquivo, arquivos.nomeHash AS hashArquivo From messages INNER JOIN anexo on anexo.mensagem = Messages.Idmessage INNER JOIN arquivos ON arquivos.nomeHash = anexo.arquivo WHERE messages.MsgFrom = contactNickName AND Messages.MsgTo = nickName OR messages.MsgFrom = nickName AND Messages.MsgTo = contactNickName
+SELECT messages.Idmessage, "" as messages ,messages.MsgFrom,"",messages.Date as dataOrd, DATE_FORMAT(messages.date, '%H:%i') as HourMsg, anexo.nome AS NomeArquivo, arquivos.nomeHash AS hashArquivo From messages INNER JOIN anexo on anexo.mensagem = messages.Idmessage INNER JOIN arquivos ON arquivos.nomeHash = anexo.arquivo WHERE messages.MsgFrom = contactNickName AND messages.MsgTo = nickName OR messages.MsgFrom = nickName AND messages.MsgTo = contactNickName
 UNION
-SELECT Messages.Idmessage, Messages.Messages, Messages.MsgFrom,Messages.MsgTo, Messages.Date as dataOrd, DATE_FORMAT(messages.date, '%H:%i') as HourMsg, "" AS NomeArquivo, "" AS hashArquivo From messages WHERE messages.MsgFrom = contactNickName AND Messages.MsgTo = nickName AND messages.Messages != "" OR messages.MsgFrom = nickName AND Messages.MsgTo = contactNickName AND messages.Messages != "" ORDER BY dataOrd DESC LIMIT 0,15$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `contNotReceived`(IN `contactNickName` VARCHAR(20))
-    NO SQL
-SELECT COUNT(Idmessage) AS contMSg FROM messages WHERE Messages.MsgFrom = contactNickName AND received = 0 OR Messages.MsgFrom = contactNickName AND received = 2$$
+SELECT messages.Idmessage, messages.Messages, messages.MsgFrom,messages.MsgTo, messages.Date as dataOrd, DATE_FORMAT(messages.date, '%H:%i') as HourMsg, "" AS NomeArquivo, "" AS hashArquivo From messages WHERE messages.MsgFrom = contactNickName AND messages.MsgTo = nickName AND messages.Messages != "" OR messages.MsgFrom = nickName AND messages.MsgTo = contactNickName AND messages.Messages != "" ORDER BY dataOrd DESC LIMIT 0,15$$
 
 DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `anexo`
+--
 
 CREATE TABLE `anexo` (
   `anexoId` int(20) NOT NULL,
@@ -34,34 +60,56 @@ CREATE TABLE `anexo` (
   `mensagem` int(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `arquivos`
+--
+
 CREATE TABLE `arquivos` (
   `nomeHash` varchar(300) NOT NULL,
   `arquivo` longblob NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `clientes`
+--
+
 CREATE TABLE `clientes` (
   `nomeCliente` varchar(20) NOT NULL,
   `nickName` varchar(20) NOT NULL,
-  `senha` varchar(64) NOT NULL
+  `senha` varchar(64) NOT NULL,
+  `deviceID` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `clientes` (`nomeCliente`, `nickName`, `senha`) VALUES
-('Alyssom', 'ally77', 'a51696a86ebadde170b7b06e83f1ec82'),
-('Based Pepe', 'based_Pepe', '7bb8414eeea88d61ddaa90ab732f1c56'),
-('Гуммо', 'gvmmo', '46de12bf37a60ee1868826fa8b2f6dd4'),
-('HongKong77', 'hong_kong77', '9de6f455f1316788a94e36c6db2dff4e'),
-('Juliana Monique', 'juhMonique', 'dbdf6b52482eeaca1d540116bf42f52a'),
-('Lobo da Estepe', 'LoboDaEstepe', '8e5f96d94b6446e3e9b497cac95d4540'),
-('Logan', 'logan77', '401a66b2ed2ee754683da79537eba83d'),
-('lolo', 'lolo', '8dddc0620fe076293393ad81e3ce86fd'),
-('Marlon', 'marlon77', 'cefdad4bd12e8c57cdf9cf1d176b429a'),
-('Mayumi Sato', 'mayumi_Sato', 'fa9e685425a32079d81f024355066df8'),
-('pco', 'pco_cooperative', '24ebaad6df398839d63f29cb7eb3b971'),
-('Pepe BluePill', 'pepe_bluepill', 'd9002957b34ebefa020cca178bd46739'),
-('Rafael', 'rafa77', 'cbcc887b198ad392cd9f60027f27e37a'),
-('Уильям Голден', 'willGolden', '69013773d31191dcc17bf195f73ef2e6'),
-('wololo', 'wololo', '89b44b8b1515dd349cce0b300029c054');
+--
+-- Despejando dados para a tabela `clientes`
+--
 
+INSERT INTO `clientes` (`nomeCliente`, `nickName`, `senha`, `deviceID`) VALUES
+('Alyssom', 'ally77', 'a51696a86ebadde170b7b06e83f1ec82', '1'),
+('Based Pepe', 'based_Pepe', '7bb8414eeea88d61ddaa90ab732f1c56', '2'),
+('Гуммо', 'gvmmo', '46de12bf37a60ee1868826fa8b2f6dd4', '15'),
+('HongKong77', 'hong_kong77', '9de6f455f1316788a94e36c6db2dff4e', '3'),
+('Juliana Monique', 'juhMonique', 'dbdf6b52482eeaca1d540116bf42f52a', '4'),
+('Lobo da Estepe', 'LoboDaEstepe', '8e5f96d94b6446e3e9b497cac95d4540', '5'),
+('Logan', 'logan77', '401a66b2ed2ee754683da79537eba83d', '6'),
+('lolo', 'lolo', '8dddc0620fe076293393ad81e3ce86fd', '7'),
+('Marlon', 'marlon77', 'cefdad4bd12e8c57cdf9cf1d176b429a', '8'),
+('Mayumi Sato', 'mayumi_Sato', 'fa9e685425a32079d81f024355066df8', '10'),
+('pco', 'pco_cooperative', '24ebaad6df398839d63f29cb7eb3b971', '11'),
+('Pepe BluePill', 'pepe_bluepill', 'd9002957b34ebefa020cca178bd46739', '12'),
+('Rafael', 'rafa77', 'cbcc887b198ad392cd9f60027f27e37a', '13'),
+('Уильям Голден', 'willGolden', '69013773d31191dcc17bf195f73ef2e6', '6878be4f517024e6949952b684193481'),
+('wololo', 'wololo', '89b44b8b1515dd349cce0b300029c054', '14');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `messages`
+--
 
 CREATE TABLE `messages` (
   `Idmessage` int(20) NOT NULL,
@@ -72,7 +120,9 @@ CREATE TABLE `messages` (
   `received` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-
+--
+-- Despejando dados para a tabela `messages`
+--
 
 INSERT INTO `messages` (`Idmessage`, `Messages`, `MsgFrom`, `MsgTo`, `Date`, `received`) VALUES
 (9, 'E ai bl? Cara', 'ally77', 'willGolden', '2021-03-06 22:48:24', 1),
@@ -143,7 +193,18 @@ INSERT INTO `messages` (`Idmessage`, `Messages`, `MsgFrom`, `MsgTo`, `Date`, `re
 (1218, 'Como vai\r\n', 'gvmmo', 'willGolden', '2021-04-18 20:42:34', 1),
 (1219, 'Olá\r\n', 'gvmmo', 'willGolden', '2021-04-18 20:42:46', 1),
 (1221, 'Houve erro?\r\n', 'gvmmo', 'willGolden', '2021-04-18 20:43:21', 1),
-(1222, 'Engraçado\r\n', 'gvmmo', 'hong_kong77', '2021-04-18 20:43:36', 1);
+(1222, 'Engraçado\r\n', 'gvmmo', 'hong_kong77', '2021-04-18 20:43:36', 1),
+(1223, 'Olá\n', 'willGolden', 'rafa77', '2021-10-11 22:10:37', 0),
+(1224, '', 'willGolden', 'rafa77', '2021-10-14 23:21:48', 0),
+(1227, '', 'willGolden', 'rafa77', '2021-10-14 23:23:19', 0),
+(1228, '', 'willGolden', 'rafa77', '2021-10-14 23:23:36', 0),
+(1230, '', 'willGolden', 'rafa77', '2021-10-14 23:24:19', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `profilepicture`
+--
 
 CREATE TABLE `profilepicture` (
   `clienteId` varchar(20) NOT NULL,
@@ -151,40 +212,83 @@ CREATE TABLE `profilepicture` (
   `format` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Índices de tabela `anexo`
+--
 ALTER TABLE `anexo`
   ADD PRIMARY KEY (`anexoId`),
   ADD KEY `arquivoAnexado` (`arquivo`),
   ADD KEY `mensagemAnexada` (`mensagem`);
 
+--
+-- Índices de tabela `arquivos`
+--
 ALTER TABLE `arquivos`
   ADD PRIMARY KEY (`nomeHash`);
 
+--
+-- Índices de tabela `clientes`
+--
 ALTER TABLE `clientes`
-  ADD PRIMARY KEY (`nickName`);
+  ADD PRIMARY KEY (`nickName`),
+  ADD UNIQUE KEY `devicID` (`deviceID`);
 
+--
+-- Índices de tabela `messages`
+--
 ALTER TABLE `messages`
   ADD PRIMARY KEY (`Idmessage`) USING BTREE,
   ADD KEY `msgToCliente` (`MsgTo`),
   ADD KEY `msgFromCliente` (`MsgFrom`),
   ADD KEY `Idmessage` (`Idmessage`);
 
+--
+-- Índices de tabela `profilepicture`
+--
 ALTER TABLE `profilepicture`
   ADD KEY `clienteId` (`clienteId`);
 
+--
+-- AUTO_INCREMENT para tabelas despejadas
+--
+
+--
+-- AUTO_INCREMENT de tabela `anexo`
+--
 ALTER TABLE `anexo`
-  MODIFY `anexoId` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=343;
+  MODIFY `anexoId` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=349;
 
+--
+-- AUTO_INCREMENT de tabela `messages`
+--
 ALTER TABLE `messages`
-  MODIFY `Idmessage` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1223;
+  MODIFY `Idmessage` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1232;
 
+--
+-- Restrições para tabelas despejadas
+--
+
+--
+-- Restrições para tabelas `anexo`
+--
 ALTER TABLE `anexo`
   ADD CONSTRAINT `arquivoAnexado` FOREIGN KEY (`arquivo`) REFERENCES `arquivos` (`nomeHash`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `mensagemAnexada` FOREIGN KEY (`mensagem`) REFERENCES `messages` (`Idmessage`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+--
+-- Restrições para tabelas `messages`
+--
 ALTER TABLE `messages`
   ADD CONSTRAINT `msgFromCliente` FOREIGN KEY (`MsgFrom`) REFERENCES `clientes` (`nickName`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `msgToCliente` FOREIGN KEY (`MsgTo`) REFERENCES `clientes` (`nickName`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+--
+-- Restrições para tabelas `profilepicture`
+--
 ALTER TABLE `profilepicture`
   ADD CONSTRAINT `clienteId` FOREIGN KEY (`clienteId`) REFERENCES `clientes` (`nickName`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

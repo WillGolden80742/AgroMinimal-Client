@@ -1290,7 +1290,6 @@ public final class Chat extends javax.swing.JFrame implements ActionListener {
         }
     };
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel addClient;
     private javax.swing.JEditorPane caixaDeEntrada;
