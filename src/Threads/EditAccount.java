@@ -44,7 +44,6 @@ public class EditAccount implements Runnable {
             message.setParam("nickName", nickName);
             message.setParam("picture", picture);
             message.setParam("format", format);
-
         } catch (NullPointerException ex) {
             System.out.print("Sem foto :" + ex);
         }

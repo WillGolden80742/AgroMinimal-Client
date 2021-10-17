@@ -23,8 +23,9 @@ public class Login extends javax.swing.JFrame {
 
     private String theme;
     private LAF laf;
+    private CodePanel codePanel;
 
-    public Login() throws IOException, ClassNotFoundException {
+    public Login() {
         initComponents();
         setIconTop();
         setLocation(500, 250);
@@ -32,6 +33,10 @@ public class Login extends javax.swing.JFrame {
         setTitle("TwoLeaf");
     }
 
+    public void setMessageLogin (String t) {
+        messageLogin.setText(t);
+    }
+    
     private void setLaf(String theme) {
         if (theme.equals("")) {
             laf = new LAF();
@@ -75,6 +80,7 @@ public class Login extends javax.swing.JFrame {
         singUp = new javax.swing.JButton();
         passIcon = new javax.swing.JLabel();
         themeLabel = new javax.swing.JLabel();
+        biometricLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -137,20 +143,33 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
+        biometricLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        biometricLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/biometric.png"))); // NOI18N
+        biometricLabel.setLabelFor(this);
+        biometricLabel.setToolTipText("Biometria");
+        biometricLabel.setMaximumSize(new java.awt.Dimension(32, 32));
+        biometricLabel.setMinimumSize(new java.awt.Dimension(32, 32));
+        biometricLabel.setPreferredSize(new java.awt.Dimension(32, 32));
+        biometricLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                biometricLabelMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(messageLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(70, Short.MAX_VALUE)
+                        .addGap(0, 60, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
                             .addComponent(passIcon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(themeLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -159,8 +178,9 @@ public class Login extends javax.swing.JFrame {
                     .addComponent(nickName)
                     .addComponent(logar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(password)
-                    .addComponent(singUp, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))
-                .addGap(99, 99, 99))
+                    .addComponent(singUp, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+                    .addComponent(biometricLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(89, 89, 89))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -171,7 +191,7 @@ public class Login extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(themeLabel)))
                 .addGap(5, 5, 5)
-                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
+                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nickName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -184,7 +204,9 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(logar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(singUp)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(10, 10, 10)
+                .addComponent(biometricLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
                 .addComponent(messageLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5))
         );
@@ -225,43 +247,20 @@ public class Login extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_themeLabelMouseClicked
 
-    public void setMessageLogin(String value) {
-        messageLogin.setText(value);
-    }
+    private void biometricLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_biometricLabelMouseClicked
+        codePanel = new CodePanel(getLocation());
+        codePanel.setVisible(true);
+    }//GEN-LAST:event_biometricLabelMouseClicked
+
 
     public void setMessageLoginColor(Color value) {
         messageLogin.setForeground(value);
     }
 
     private void login() {
-        Server server;
+        Server server = new Server();
         String replyLogin;
         String hashPassword;
-
-        File myObj = new File("server.ini");
-        Scanner myReader;
-        String host = "";
-        int port = 0;
-        try {
-            myReader = new Scanner(myObj);
-            int cont = 0;
-            while (myReader.hasNextLine()) {
-
-                String data = myReader.nextLine();
-                if (cont == 0) {
-                    data = data.replaceAll(" ", "").split(":")[1];
-                    host = data;
-                } else if (cont == 1) {
-                    data = data.replaceAll(" ", "").split(":")[1];
-                    port = Integer.parseInt(data);
-                }
-                cont++;
-            }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        server = new Server(host, port);
         Communication message = new Communication("LOGIN");
         hashPassword = new Encrypt(nickName.getText() + password.getText()).getHashMd5();
         message.setParam("nickName", nickName.getText());
@@ -281,18 +280,9 @@ public class Login extends javax.swing.JFrame {
         this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/Images/chat.png")));
     }
 
-    public static void main(String args[]) {
-
-        java.awt.EventQueue.invokeLater(() -> {
-            try {
-                new Login().setVisible(true);
-            } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel biometricLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;

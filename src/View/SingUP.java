@@ -288,12 +288,8 @@ public class SingUP extends javax.swing.JFrame {
     }//GEN-LAST:event_nameKeyReleased
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        try {
-            new Login().setVisible(true);
-            dispose();
-        } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(SingUP.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        new Login().setVisible(true);
+        dispose();
     }//GEN-LAST:event_formWindowClosing
 
     private void cadastrar() {

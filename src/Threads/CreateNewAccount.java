@@ -9,9 +9,6 @@ import ConnectionFactory.Server;
 import Model.bean.Encrypt;
 import View.Login;
 import static java.awt.Color.GREEN;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import util.Communication;
 
 /**
@@ -51,24 +48,17 @@ public class CreateNewAccount implements Runnable {
         message.setParam("name", name);
         message.setParam("nickName", nickName);
         message.setParam("password", hashPassword);
+        message.setParam("deviceID", nickName);
         replyLogin = (String) server.outPut_inPut(message).getParam("CREATEACCOUNTREPLY");
         if (replyLogin.equals("OK")) {
-            try {
-                Login l = new Login();
-                l.setMessageLogin("Conta criada com sucesso!");
-                l.setMessageLoginColor(GREEN);
-                l.setVisible(true);
-            } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(CreateNewAccount.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            Login l = new Login();
+            l.setMessageLogin("Conta criada com sucesso!");
+            l.setMessageLoginColor(GREEN);
+            l.setVisible(true);
         } else {
-            try {
-                Login l = new Login();
-                l.setMessageLogin(replyLogin);
-                l.setVisible(true);
-            } catch (IOException | ClassNotFoundException ex) {
-                Logger.getLogger(CreateNewAccount.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            Login l = new Login();
+            l.setMessageLogin(replyLogin);
+            l.setVisible(true);
         }
     }
 
