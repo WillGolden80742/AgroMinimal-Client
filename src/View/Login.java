@@ -6,12 +6,6 @@ import Model.bean.Authenticated;
 import Model.bean.Encrypt;
 import java.awt.Color;
 import java.awt.Toolkit;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import util.Communication;
 

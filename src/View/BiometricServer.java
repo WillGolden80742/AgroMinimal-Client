@@ -95,30 +95,30 @@ public class BiometricServer {
         Socket socket = serverSocket.accept();
         return socket;
     }
-
-    public static void main(String[] args) {
-        setMainServer();
-        login = new Login();
-        login.setVisible(true);
-        try {
-            UIManager.setLookAndFeel(new FlatDarkLaf());
-        } catch (UnsupportedLookAndFeelException ex) {
-            System.err.println("Failed to initialize LaF");
-        }
-        try {
-            BiometricServer server = new BiometricServer();
-            System.out.println("Starting socket...\n");
-            server.setServerSocket(portAdress);
-            while (true) {
-                Socket socket = server.waitConnection();
-                System.out.println("Cliente conectado!");
-                TreatConnection treatConnection = new TreatConnection(socket, login);
-                Thread t = new Thread(treatConnection);
-                t.start();
-                System.out.println("Cliente finalizado\n");
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(TreatConnection.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+//
+//    public static void main(String[] args) {
+//        setMainServer();
+//        login = new Login();
+//        login.setVisible(true);
+//        try {
+//            UIManager.setLookAndFeel(new FlatDarkLaf());
+//        } catch (UnsupportedLookAndFeelException ex) {
+//            System.err.println("Failed to initialize LaF");
+//        }
+//        try {
+//            BiometricServer server = new BiometricServer();
+//            System.out.println("Starting socket...\n");
+//            server.setServerSocket(portAdress);
+//            while (true) {
+//                Socket socket = server.waitConnection();
+//                System.out.println("Cliente conectado!");
+//                TreatConnection treatConnection = new TreatConnection(socket, login);
+//                Thread t = new Thread(treatConnection);
+//                t.start();
+//                System.out.println("Cliente finalizado\n");
+//            }
+//        } catch (IOException ex) {
+//            Logger.getLogger(TreatConnection.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
 }
