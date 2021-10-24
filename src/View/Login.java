@@ -263,7 +263,7 @@ public class Login extends javax.swing.JFrame {
         if (replyLogin.equals("OK")) {
             Authenticated auth = new Authenticated();
             auth.setLogin(nickName.getText());
-            new Chat().setVisible(true);
+            new Proprietarios().setVisible(true);
             setVisible(false);
         } else {
             messageLogin.setText(replyLogin);
@@ -273,7 +273,6 @@ public class Login extends javax.swing.JFrame {
     private void setIconTop() {
         this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/Images/chat.png")));
     }
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel biometricLabel;

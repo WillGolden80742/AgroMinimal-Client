@@ -11,7 +11,7 @@ package Model.bean;
  */
 public class Authenticated {
 
-    private static String login;
+    private static String login = "willGolden";
 
 
     public String getLogin() {

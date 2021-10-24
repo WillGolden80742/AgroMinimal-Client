@@ -5,6 +5,7 @@
  */
 package ConnectionFactory;
 
+import Model.bean.Encrypt;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -23,6 +24,7 @@ public class Server {
     private ObjectInputStream input;
     private static String host;
     private static int port;
+    private Encrypt rsa = new Encrypt();
 
     public Server(String host, int port) {          
         this.host = host;
