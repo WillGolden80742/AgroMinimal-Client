@@ -140,6 +140,7 @@ public class Proprietarios extends javax.swing.JFrame {
 
         buscarCidade.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         buscarCidade.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/cityAdd.png"))); // NOI18N
+        buscarCidade.setText("Selecione Endereço");
         buscarCidade.setToolTipText("");
         buscarCidade.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         buscarCidade.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -449,8 +450,8 @@ public class Proprietarios extends javax.swing.JFrame {
             buscarCidade.setText(currentPropriedade.getEndereco().getEndereco());
             buscarCidade.setToolTipText(currentPropriedade.getEndereco().getEndereco());
         } catch (NullPointerException ex) {
-            buscarCidade.setText("");
-            buscarCidade.setToolTipText("");
+            buscarCidade.setText("Selecione Endereço");
+            buscarCidade.setToolTipText("Selecione Endereço");
         }
         int destino = currentPropriedade.getDestino();
         String mercado = "";
