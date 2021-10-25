@@ -5,6 +5,7 @@
  */
 package View;
 
+import com.formdev.flatlaf.FlatDarkLaf;
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.io.File;
@@ -14,6 +15,10 @@ import java.net.URL;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
@@ -22,7 +27,7 @@ import org.w3c.dom.Document;
  *
  * @author William
  */
-public class Adress extends javax.swing.JFrame {
+public class Adress extends javax.swing.JFrame implements ChangeListener {
 
     private String enderecoInicial = "Av.+Paulista,+São+Paulo+-+SP";
     private String enderecoFinal;
@@ -30,6 +35,7 @@ public class Adress extends javax.swing.JFrame {
     private static String apiKey;
     private String mapHtml = "<html style=\"height: 100%;\"><head><meta name=\"viewport\" content=\"width=device-width, minimum-scale=0.1\"><title>staticmap (600×300)</title></head><body style=\"margin: 0px; height: 100%\"><img style=\"-webkit-user-select: none;margin: auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;\" src=\"#img\"></body></html>";
     private boolean selectSizeInit = false;
+    private boolean isExec;
 
     public Adress() {
         initComponents();
@@ -38,8 +44,36 @@ public class Adress extends javax.swing.JFrame {
         this.getContentPane().setBackground(Color.DARK_GRAY);
         setLocation(400, 200);
         setDefaulMap();
-        size.setSelectedIndex(16);
+        size.addChangeListener(this);
+        size.setValue(77);
+        size.setEnabled(false);
     }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        if (selectSizeInit) {
+            System.out.println(size.getValue());
+            new Thread(searchZoom).start();
+        } else {
+            selectSizeInit = true;
+        }
+    }
+
+    private final Runnable searchZoom = new Runnable() {
+        @Override
+        public void run() {
+            if (!isExec) {
+                isExec = true;
+                search();
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ex) {
+
+                }
+                isExec = false;
+            }
+        }
+    };
 
     public void endereco(String text) {
         logradouro.setText(text);
@@ -93,7 +127,7 @@ public class Adress extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         search1 = new javax.swing.JButton();
         mapView = new javax.swing.JEditorPane();
-        size = new javax.swing.JComboBox<>();
+        size = new javax.swing.JSlider();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -182,57 +216,51 @@ public class Adress extends javax.swing.JFrame {
         mapView.setContentType("text/html"); // NOI18N
         mapView.setText("<html>   <head>    </head>   <body styles=\"background-image: url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'); background-size: 100%;\">     <p style=\"margin-top: 0\">            </p>   </body> </html> ");
 
-        size.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1x", "2x", "3x", "4x", "5x", "6x", "7x", "8x", "9x", "10x", "11x", "12x", "13x", "14x", "15x", "16x", "17x", "18x", "19x", "20x", "21x", "22x", "23x", "24x", "25x", "26x", "27x", "28x", "29x", "30x" }));
-        size.setEnabled(false);
-        size.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sizeActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(6, 6, 6)
                                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(logradouro)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(search1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(search, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(referencia, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(complemento, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(logradouro, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(referencia, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(search1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(size, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGap(12, 12, 12))
-                    .addComponent(mapView, javax.swing.GroupLayout.Alignment.LEADING))
-                .addContainerGap())
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(complemento)
+                                    .addComponent(search, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE))))
+                        .addGap(10, 10, 10))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(size, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(mapView))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(mapView, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(mapView, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
+                .addComponent(size, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(logradouro, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(size, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(complemento, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -267,14 +295,6 @@ public class Adress extends javax.swing.JFrame {
 
     }//GEN-LAST:event_formWindowGainedFocus
 
-    private void sizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sizeActionPerformed
-        if (selectSizeInit) {
-            new Thread(downloadMap).start();
-        } else {
-            selectSizeInit = true;
-        }
-    }//GEN-LAST:event_sizeActionPerformed
-
     private String endercoTratado() {
         String[] endereçoArray = logradouro.getText().split(" ");
         String endereco = "";
@@ -293,11 +313,15 @@ public class Adress extends javax.swing.JFrame {
     private final Runnable downloadMap = new Runnable() {
         @Override
         public void run() {
-            String x = ((String) size.getSelectedItem()).toLowerCase().replace("x", "");
+            String x = String.valueOf((int) (size.getValue() / 4.545454545));
             mapHtml = "<html style=\"height: 100%;\"><head><meta name=\"viewport\" content=\"width=device-width, minimum-scale=0.1\"><title>staticmap (600×300)</title></head><body style=\"margin: 0px; background:white; height: 100%\"><img style=\"-webkit-user-select: none;margin: auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;\" src=\"#img\"></body></html>";
             String url = "https://maps.googleapis.com/maps/api/staticmap?size=512x256&maptype=roadmap&markers=size:mid%7Ccolor:red%7C" + endercoTratado() + "&zoom=" + x + "&size=512x256&maptype=roadmap&key=" + apiKey;
             mapHtml = mapHtml.replace("#img", url);
-            mapView.setText(mapHtml);
+            try {
+                mapView.setText(mapHtml);
+            } catch (NullPointerException ex) {
+            } catch (RuntimeException ex) {
+            }
             size.setEnabled(true);
             // faz o preload da imagem
         }
@@ -358,6 +382,6 @@ public class Adress extends javax.swing.JFrame {
     private javax.swing.JTextField referencia;
     private javax.swing.JButton search;
     private javax.swing.JButton search1;
-    private javax.swing.JComboBox<String> size;
+    private javax.swing.JSlider size;
     // End of variables declaration//GEN-END:variables
 }
