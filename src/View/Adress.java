@@ -52,7 +52,6 @@ public class Adress extends javax.swing.JFrame implements ChangeListener {
     @Override
     public void stateChanged(ChangeEvent e) {
         if (selectSizeInit) {
-            System.out.println(size.getValue());
             new Thread(searchZoom).start();
         } else {
             selectSizeInit = true;
