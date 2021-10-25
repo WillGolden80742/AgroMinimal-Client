@@ -312,7 +312,7 @@ public class Adress extends javax.swing.JFrame implements ChangeListener {
     private final Runnable downloadMap = new Runnable() {
         @Override
         public void run() {
-            String x = String.valueOf((int) (size.getValue() / 4.545454545));
+            String x = String.valueOf((int)(size.getValue() / 4.545454545));
             mapHtml = "<html style=\"height: 100%;\"><head><meta name=\"viewport\" content=\"width=device-width, minimum-scale=0.1\"><title>staticmap (600×300)</title></head><body style=\"margin: 0px; background:white; height: 100%\"><img style=\"-webkit-user-select: none;margin: auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;\" src=\"#img\"></body></html>";
             String url = "https://maps.googleapis.com/maps/api/staticmap?size=512x256&maptype=roadmap&markers=size:mid%7Ccolor:red%7C" + endercoTratado() + "&zoom=" + x + "&size=512x256&maptype=roadmap&key=" + apiKey;
             mapHtml = mapHtml.replace("#img", url);
@@ -330,7 +330,6 @@ public class Adress extends javax.swing.JFrame implements ChangeListener {
         @Override
         public void run() {
             String urlString = "https://maps.googleapis.com/maps/api/distancematrix/xml?origins=" + enderecoInicial + "&destinations=" + enderecoFinal + "&key=" + apiKey + "&mode=driving&language=pt-BR&sensor=false";
-            System.out.println(urlString);
             try {
 
                 URL urlGoogleDirService = new URL(urlString);
@@ -351,7 +350,6 @@ public class Adress extends javax.swing.JFrame implements ChangeListener {
                 values = new String[2];
                 int i = 0;
                 for (String s : value) {
-                    System.out.println("Valores" + s);
                     if (i == 3) {
                         values[0] = s;
                     }
@@ -366,7 +364,6 @@ public class Adress extends javax.swing.JFrame implements ChangeListener {
             }
         }
     };
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField complemento;
