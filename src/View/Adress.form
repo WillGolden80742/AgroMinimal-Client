@@ -76,7 +76,7 @@
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Component id="jLabel4" min="-2" pref="70" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="search1" alignment="0" min="-2" pref="182" max="-2" attributes="0"/>
+                                  <Component id="saveAdress" alignment="0" min="-2" pref="182" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -102,8 +102,8 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="mapView" min="-2" pref="244" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+              <Component id="mapView" min="-2" pref="256" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="size" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -119,7 +119,7 @@
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="search1" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
+                  <Component id="saveAdress" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
                   <Component id="search" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -235,7 +235,7 @@
         <Property name="text" type="java.lang.String" value="Ref : "/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="search1">
+    <Component class="javax.swing.JButton" name="saveAdress">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Liberation Sans" size="15" style="1"/>
@@ -255,7 +255,7 @@
         <Property name="contentAreaFilled" type="boolean" value="false"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="search1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveAdressActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JEditorPane" name="mapView">

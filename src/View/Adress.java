@@ -5,6 +5,9 @@
  */
 package View;
 
+import ConnectionFactory.Server;
+import Model.bean.Endereco;
+import Model.bean.Propriedade;
 import com.formdev.flatlaf.FlatDarkLaf;
 import java.awt.Color;
 import java.awt.Toolkit;
@@ -12,16 +15,18 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
+import util.Communication;
 
 /**
  *
@@ -36,6 +41,7 @@ public class Adress extends javax.swing.JFrame implements ChangeListener {
     private String mapHtml = "<html style=\"height: 100%;\"><head><meta name=\"viewport\" content=\"width=device-width, minimum-scale=0.1\"><title>staticmap (600×300)</title></head><body style=\"margin: 0px; height: 100%\"><img style=\"-webkit-user-select: none;margin: auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;\" src=\"#img\"></body></html>";
     private boolean selectSizeInit = false;
     private boolean isExec;
+    private int propriedadeId;
 
     public Adress() {
         initComponents();
@@ -63,7 +69,7 @@ public class Adress extends javax.swing.JFrame implements ChangeListener {
         public void run() {
             if (!isExec) {
                 isExec = true;
-                search();
+                searchMap();
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException ex) {
@@ -74,9 +80,16 @@ public class Adress extends javax.swing.JFrame implements ChangeListener {
         }
     };
 
-    public void endereco(String text) {
-        logradouro.setText(text);
-        search();
+    public void endereco(int proprID, Endereco end) {
+        try {
+            logradouro.setText(end.getEndereco());
+            referencia.setText(end.getReferencia());
+            complemento.setText(end.getComplemento());
+            search();
+        } catch (NullPointerException ex) {
+
+        }
+        this.propriedadeId = proprID;
     }
 
     private void setDefaulMap() {
@@ -124,7 +137,7 @@ public class Adress extends javax.swing.JFrame implements ChangeListener {
         complemento = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        search1 = new javax.swing.JButton();
+        saveAdress = new javax.swing.JButton();
         mapView = new javax.swing.JEditorPane();
         size = new javax.swing.JSlider();
 
@@ -199,15 +212,15 @@ public class Adress extends javax.swing.JFrame implements ChangeListener {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel5.setText("Ref : ");
 
-        search1.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
-        search1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/save.png"))); // NOI18N
-        search1.setText("SALVAR");
-        search1.setToolTipText("Salvar");
-        search1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
-        search1.setContentAreaFilled(false);
-        search1.addActionListener(new java.awt.event.ActionListener() {
+        saveAdress.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
+        saveAdress.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/save.png"))); // NOI18N
+        saveAdress.setText("SALVAR");
+        saveAdress.setToolTipText("Salvar");
+        saveAdress.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(102, 102, 102)));
+        saveAdress.setContentAreaFilled(false);
+        saveAdress.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                search1ActionPerformed(evt);
+                saveAdressActionPerformed(evt);
             }
         });
 
@@ -237,7 +250,7 @@ public class Adress extends javax.swing.JFrame implements ChangeListener {
                                         .addComponent(referencia, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(search1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(saveAdress, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(complemento)
@@ -253,8 +266,8 @@ public class Adress extends javax.swing.JFrame implements ChangeListener {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(mapView, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
+                .addComponent(mapView, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(size, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -268,7 +281,7 @@ public class Adress extends javax.swing.JFrame implements ChangeListener {
                     .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(search1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(saveAdress, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(search, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
@@ -286,9 +299,19 @@ public class Adress extends javax.swing.JFrame implements ChangeListener {
         }
     }//GEN-LAST:event_logradouroKeyReleased
 
-    private void search1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_search1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_search1ActionPerformed
+    private void saveAdressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAdressActionPerformed
+        Endereco end = new Endereco();
+        end.setEndereco(logradouro.getText());
+        end.setComplemento(complemento.getText());
+        end.setReferencia(referencia.getText());
+        Server server = new Server();
+        Communication communication = new Communication("ENDERECOUPDATE");
+        communication.setParam("endereco", end);
+        communication.setParam("propriedadeId", propriedadeId);
+        communication = server.outPut_inPut(communication);
+        JOptionPane.showMessageDialog(null, communication.getParam("ENDERECOUPDATEREPLY"));
+        setVisible(false);
+    }//GEN-LAST:event_saveAdressActionPerformed
 
     private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
 
@@ -303,6 +326,11 @@ public class Adress extends javax.swing.JFrame implements ChangeListener {
         return endereco;
     }
 
+    private void searchMap() {
+        enderecoFinal = endercoTratado();
+        new Thread(downloadMap).start();
+    }
+
     private void search() {
         enderecoFinal = endercoTratado();
         new Thread(endereco).start();
@@ -312,7 +340,7 @@ public class Adress extends javax.swing.JFrame implements ChangeListener {
     private final Runnable downloadMap = new Runnable() {
         @Override
         public void run() {
-            String x = String.valueOf((int)(size.getValue() / 4.545454545));
+            String x = String.valueOf((int) (size.getValue() / 4.545454545));
             mapHtml = "<html style=\"height: 100%;\"><head><meta name=\"viewport\" content=\"width=device-width, minimum-scale=0.1\"><title>staticmap (600×300)</title></head><body style=\"margin: 0px; background:white; height: 100%\"><img style=\"-webkit-user-select: none;margin: auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;\" src=\"#img\"></body></html>";
             String url = "https://maps.googleapis.com/maps/api/staticmap?size=512x256&maptype=roadmap&markers=size:mid%7Ccolor:red%7C" + endercoTratado() + "&zoom=" + x + "&size=512x256&maptype=roadmap&key=" + apiKey;
             mapHtml = mapHtml.replace("#img", url);
@@ -376,8 +404,8 @@ public class Adress extends javax.swing.JFrame implements ChangeListener {
     private javax.swing.JTextField logradouro;
     private javax.swing.JEditorPane mapView;
     private javax.swing.JTextField referencia;
+    private javax.swing.JButton saveAdress;
     private javax.swing.JButton search;
-    private javax.swing.JButton search1;
     private javax.swing.JSlider size;
     // End of variables declaration//GEN-END:variables
 }

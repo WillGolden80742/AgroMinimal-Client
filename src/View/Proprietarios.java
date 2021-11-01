@@ -8,6 +8,7 @@ import ConnectionFactory.Server;
 import Model.bean.Propriedade;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import util.Communication;
 
@@ -24,14 +25,20 @@ public class Proprietarios extends javax.swing.JFrame {
 
     public Proprietarios() {
         initComponents();
-        setTable();
         setLocation(400, 100);
         new Thread(readTableProprietarios).start();
+        toggleFields(false);
     }
 
-    private void setTable() {
-        DefaultTableModel modelo = (DefaultTableModel) propriedadeTable.getModel();
-        modelo.setNumRows(1);
+    private void toggleFields(boolean b) {
+        buscarCidade.setEnabled(b);
+        nomePropriedade.setEditable(b);
+        prodAnualLabel.setEditable(b);
+        destinoComboBox.setEnabled(b);
+        empregadoSpinner.setEnabled(b);
+        nivelSpinner.setEnabled(b);
+        maquinasSpinner.setEnabled(b);
+        salvar.setEnabled(b);
     }
 
     private final Runnable readTableProprietarios = new Runnable() {
@@ -41,7 +48,7 @@ public class Proprietarios extends javax.swing.JFrame {
             modelo.setNumRows(0);
             Communication communication = new Communication("PROPRIEDADES");
             communication = server.outPut_inPut(communication);
-            List<Propriedade> propDAO = (ArrayList<Propriedade>) communication.getParam("PROPRIEDADESREPLY");
+            List<Propriedade> propDAO = (ArrayList) communication.getParam("PROPRIEDADESREPLY");
             for (Propriedade p : propDAO) {
                 modelo.addRow(new Object[]{
                     p.getCpnj(),
@@ -52,6 +59,7 @@ public class Proprietarios extends javax.swing.JFrame {
             for (Propriedade p : propDAO) {
                 propriedades.add(p);
             }
+            toggleFields(false);
         }
     };
 
@@ -74,11 +82,17 @@ public class Proprietarios extends javax.swing.JFrame {
         prodButton = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         nomePropriedade = new javax.swing.JTextField();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        propriedadeTable = new javax.swing.JTable();
         jSeparator1 = new javax.swing.JSeparator();
         produtos1 = new javax.swing.JLabel();
         prodAnualLabel = new javax.swing.JTextField();
+        nivelSpinner = new javax.swing.JSpinner();
+        empregadoSpinner = new javax.swing.JSpinner();
+        maquinasSpinner = new javax.swing.JSpinner();
+        destinoComboBox = new javax.swing.JComboBox<>();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jTabbedPane3 = new javax.swing.JTabbedPane();
         apagar = new javax.swing.JButton();
@@ -93,6 +107,13 @@ public class Proprietarios extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowFocusListener(new java.awt.event.WindowFocusListener() {
+            public void windowGainedFocus(java.awt.event.WindowEvent evt) {
+                formWindowGainedFocus(evt);
+            }
+            public void windowLostFocus(java.awt.event.WindowEvent evt) {
+            }
+        });
 
         propriedadesTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -106,7 +127,7 @@ public class Proprietarios extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false
+                true, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -167,25 +188,22 @@ public class Proprietarios extends javax.swing.JFrame {
             }
         });
 
-        propriedadeTable.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
-        propriedadeTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Mercado", "Empregados", "Máquinas ", "Nível Automação"
-            }
-        ));
-        jScrollPane2.setViewportView(propriedadeTable);
-
         produtos1.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
+        produtos1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         produtos1.setText("Prod. anual : ");
 
         prodAnualLabel.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         prodAnualLabel.setText("29 kg");
+
+        destinoComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "interno", "externo" }));
+
+        jLabel5.setText("Mercado : ");
+
+        jLabel6.setText("Empregados : ");
+
+        jLabel7.setText("Maquinas :");
+
+        jLabel8.setText("Nivel automação : ");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -193,27 +211,43 @@ public class Proprietarios extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jSeparator1)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(buscarCidade, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(nomePropriedade))
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(produtos, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(produtos1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(92, 92, 92))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane2))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(prodAnualLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(prodButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(destinoComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(empregadoSpinner))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(buscarCidade, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(nomePropriedade))
-                        .addGap(10, 10, 10)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(produtos1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(produtos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(maquinasSpinner))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(prodButton, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
-                            .addComponent(prodAnualLabel))))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(nivelSpinner))))
                 .addGap(5, 5, 5))
         );
         jPanel1Layout.setVerticalGroup(
@@ -221,11 +255,12 @@ public class Proprietarios extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(5, 5, 5)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(produtos1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(produtos1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(prodAnualLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(nomePropriedade, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(prodAnualLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -234,11 +269,24 @@ public class Proprietarios extends javax.swing.JFrame {
                         .addComponent(produtos, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(prodButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
-                .addGap(5, 5, 5)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel6)
+                        .addComponent(jLabel7)
+                        .addComponent(jLabel5)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nivelSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(empregadoSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(maquinasSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(destinoComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0))
         );
+
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel5, jLabel6, jLabel7, jLabel8, maquinasSpinner});
 
         nivel.addTab("Nível 1", jPanel1);
         nivel.addTab("Nível 2", jTabbedPane2);
@@ -317,7 +365,7 @@ public class Proprietarios extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(apagar)
                 .addContainerGap())
-            .addComponent(nivel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 576, Short.MAX_VALUE)
+            .addComponent(nivel, javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(5, 5, 5)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -378,10 +426,7 @@ public class Proprietarios extends javax.swing.JFrame {
 
     private void buscarCidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarCidadeActionPerformed
         adress = new Adress();
-        try {
-            adress.endereco(currentPropriedade.getEndereco().getEndereco());
-        } catch (NullPointerException ex) {
-        }
+        adress.endereco(currentPropriedade.getPropriedadeId(), currentPropriedade.getEndereco());
         adress.setVisible(true);
     }//GEN-LAST:event_buscarCidadeActionPerformed
 
@@ -390,15 +435,33 @@ public class Proprietarios extends javax.swing.JFrame {
     }//GEN-LAST:event_apagarActionPerformed
 
     private void salvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salvarActionPerformed
-//        if (getValidation () == true ) {
-//            if (salvarStatus == 1) {
-//                create ();
-//            } else if (salvarStatus == 2) {
-//                update();
-//            }
-//            this.salvarStatus = 0;
-//        }
+        Server server = new Server();
+        Propriedade propriedade = getPropriedade(currentPropriedade);
+        Communication communication = new Communication("PROPRIEDADEUPDATE");
+        communication.setParam("propriedade", propriedade);
+        communication = server.outPut_inPut(communication);
+        JOptionPane.showMessageDialog(null, communication.getParam("PROPRIEDADEUPDATEREPLY"));
+        toggleFields(false);
     }//GEN-LAST:event_salvarActionPerformed
+
+    private Propriedade getPropriedade(Propriedade propriedade) {
+        String mercado = (String) destinoComboBox.getSelectedItem();
+        int destino = 0;
+        switch (mercado) {
+            case "interno":
+                destino = 1;
+                break;
+            case "externo":
+                destino = 0;
+                break;
+        }
+        propriedade.setDestino(destino);
+        propriedade.setNumeroEmpregados((int) empregadoSpinner.getValue());
+        propriedade.setMaquinas((int) maquinasSpinner.getValue());
+        propriedade.setNivelAutomacao((int) nivelSpinner.getValue());
+        propriedade.setNome(nomePropriedade.getText());
+        return propriedade;
+    }
 
     private void jPanel1ComponentRemoved(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_jPanel1ComponentRemoved
         // TODO add your handling code here:
@@ -409,11 +472,7 @@ public class Proprietarios extends javax.swing.JFrame {
     }//GEN-LAST:event_nomePropriedadeActionPerformed
 
     private void editarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarActionPerformed
-//        setValue();
-//        elementsEnabled(true);
-//        updateState = true;
-//        statusExame.setText("");
-//        this.salvarStatus = 2;
+        toggleFields(true);
     }//GEN-LAST:event_editarActionPerformed
 
     private void novoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_novoActionPerformed
@@ -437,40 +496,53 @@ public class Proprietarios extends javax.swing.JFrame {
         proprietarioSelected();
     }//GEN-LAST:event_propriedadesTableKeyReleased
 
+    private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
+        try {
+            if (!adress.isVisible() && propriedadesTable.getSelectedRow() >= 0) {
+                proprietarioSelected();
+            }
+        } catch (NullPointerException ex) {
+
+        }
+    }//GEN-LAST:event_formWindowGainedFocus
+
+    private String limitText(String text) {
+        return limitText(text, 30);
+    }
+
+    private String limitText(String text, int l) {
+        if (text.length() > l) {
+            text = text.substring(0, l) + " ...";
+        }
+        return text;
+    }
+
     private void proprietarioSelected() {
+        toggleFields(false);
         Communication communication = new Communication("PROPRIEDADESELECTED");
         communication.setParam("propriedadeId", propriedades.get(propriedadesTable.getSelectedRow()).getPropriedadeId());
         communication = server.outPut_inPut(communication);
         currentPropriedade = (Propriedade) communication.getParam("PROPRIEDADESELECTEDREPLY");
-
-        DefaultTableModel modelo = (DefaultTableModel) propriedadeTable.getModel();
-        modelo.setNumRows(0);
-        nomePropriedade.setText(currentPropriedade.getNome());
+        nomePropriedade.setText(limitText(currentPropriedade.getNome(), 35));
         try {
-            buscarCidade.setText(currentPropriedade.getEndereco().getEndereco());
-            buscarCidade.setToolTipText(currentPropriedade.getEndereco().getEndereco());
+            buscarCidade.setText(limitText(currentPropriedade.getEndereco().getEndereco()));
+            buscarCidade.setToolTipText(limitText(currentPropriedade.getEndereco().getEndereco()));
         } catch (NullPointerException ex) {
             buscarCidade.setText("Selecione Endereço");
             buscarCidade.setToolTipText("Selecione Endereço");
         }
         int destino = currentPropriedade.getDestino();
-        String mercado = "";
         switch (destino) {
             case 1:
-                mercado = "interno";
+                destinoComboBox.setSelectedIndex(0);
                 break;
             case 0:
-                mercado = "externo";
+                destinoComboBox.setSelectedIndex(1);
                 break;
         }
-
-        modelo.addRow(new Object[]{
-            mercado,
-            currentPropriedade.getNumeroEmpregados(),
-            currentPropriedade.getMaquinas(),
-            currentPropriedade.getNivelAutomacao()
-        });
-
+        empregadoSpinner.setValue(currentPropriedade.getNumeroEmpregados());
+        maquinasSpinner.setValue(currentPropriedade.getMaquinas());
+        nivelSpinner.setValue(currentPropriedade.getNivelAutomacao());
     }
 
     /**
@@ -480,29 +552,35 @@ public class Proprietarios extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton apagar;
     private javax.swing.JButton buscarCidade;
+    private javax.swing.JComboBox<String> destinoComboBox;
     private javax.swing.JButton editar;
+    private javax.swing.JSpinner empregadoSpinner;
     private javax.swing.JButton jButton1;
     private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTabbedPane jTabbedPane3;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JSpinner maquinasSpinner;
     private javax.swing.JTabbedPane nivel;
+    private javax.swing.JSpinner nivelSpinner;
     private javax.swing.JTextField nomePropriedade;
     private javax.swing.JButton novo;
     private javax.swing.JTextField prodAnualLabel;
     private javax.swing.JButton prodButton;
     private javax.swing.JLabel produtos;
     private javax.swing.JLabel produtos1;
-    private javax.swing.JTable propriedadeTable;
     private javax.swing.JTable propriedadesTable;
     private javax.swing.JButton salvar;
     // End of variables declaration//GEN-END:variables
