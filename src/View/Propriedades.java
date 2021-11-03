@@ -5,6 +5,7 @@
 package View;
 
 import ConnectionFactory.Server;
+import Model.bean.Imposto;
 import Model.bean.Propriedade;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,17 +17,19 @@ import util.Communication;
  *
  * @author will
  */
-public class Proprietarios extends javax.swing.JFrame {
+public class Propriedades extends javax.swing.JFrame {
 
     private Server server = new Server();
     private Adress adress;
     private List<Propriedade> propriedades;
+    private List<Imposto> impostos;
     private Propriedade currentPropriedade = new Propriedade();
+    private String CPNJDefault = "   .   .   /    -  ";
 
-    public Proprietarios() {
+    public Propriedades() {
         initComponents();
         setLocation(400, 100);
-        new Thread(readTableProprietarios).start();
+        new Thread(readTables).start();
         toggleFields(false);
     }
 
@@ -41,27 +44,56 @@ public class Proprietarios extends javax.swing.JFrame {
         salvar.setEnabled(b);
     }
 
-    private final Runnable readTableProprietarios = new Runnable() {
+    private final Runnable readTables = new Runnable() {
         @Override
         public void run() {
-            DefaultTableModel modelo = (DefaultTableModel) propriedadesTable.getModel();
-            modelo.setNumRows(0);
+            DefaultTableModel modelo = null;
             Communication communication = new Communication("PROPRIEDADES");
+            if (!nomeTextField.getText().equals("")) {
+                communication.setParam("nome", nomeTextField.getText());
+            } else {
+                communication.setParam("nome", "");
+            }
+            if (!CPNJFormattedTextField.getText().equals(CPNJDefault)) {
+                communication.setParam("cnpj", CPNJFormattedTextField.getText());
+            } else {
+                communication.setParam("cnpj", "");
+            }
             communication = server.outPut_inPut(communication);
-            List<Propriedade> propDAO = (ArrayList) communication.getParam("PROPRIEDADESREPLY");
-            for (Propriedade p : propDAO) {
-                modelo.addRow(new Object[]{
-                    p.getCpnj(),
-                    p.getNome()
-                });
-            }
-            propriedades = new ArrayList<>();
-            for (Propriedade p : propDAO) {
-                propriedades.add(p);
-            }
+            readPropriedades(communication, modelo);
+            readImpostos(communication, modelo);
             toggleFields(false);
         }
     };
+
+    private void readPropriedades(Communication communication, DefaultTableModel modelo) {
+        modelo = (DefaultTableModel) propriedadesTable.getModel();
+        modelo.setNumRows(0);
+        List<Propriedade> propDAO = (ArrayList) communication.getParam("PROPRIEDADESREPLY");
+        for (Propriedade p : propDAO) {
+            modelo.addRow(new Object[]{
+                p.getCpnj(),
+                p.getNome()
+            });
+        }
+        propriedades = propDAO;
+    }
+
+    private void readImpostos(Communication communication, DefaultTableModel modelo) {
+        modelo = (DefaultTableModel) impostoTable.getModel();
+        modelo.setNumRows(0);
+        List<Imposto> impDAO = (ArrayList) communication.getParam("IMPOSTOSREPLY");
+        for (Imposto i : impDAO) {
+            modelo.addRow(new Object[]{
+                i.getValorBruto(),
+                i.getValorLiquido(),
+                i.getSubsidio(),
+                i.getNome(),
+                i.getTipo()
+            });
+        }
+        impostos = impDAO;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -72,10 +104,11 @@ public class Proprietarios extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTextField1 = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         propriedadesTable = new javax.swing.JTable();
         nivel = new javax.swing.JTabbedPane();
-        jPanel1 = new javax.swing.JPanel();
+        detalhesPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         buscarCidade = new javax.swing.JButton();
         produtos = new javax.swing.JLabel();
@@ -93,18 +126,24 @@ public class Proprietarios extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jTabbedPane2 = new javax.swing.JTabbedPane();
-        jTabbedPane3 = new javax.swing.JTabbedPane();
+        impostoPanel = new javax.swing.JPanel();
+        impostoTotalLabel = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        impostoTable = new javax.swing.JTable();
+        pagoRadioButton = new javax.swing.JRadioButton();
         apagar = new javax.swing.JButton();
         salvar = new javax.swing.JButton();
-        jFormattedTextField1 = new javax.swing.JFormattedTextField();
+        CPNJFormattedTextField = new javax.swing.JFormattedTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        nomeTextField = new javax.swing.JTextField();
+        searchPropriedades = new javax.swing.JButton();
         editar = new javax.swing.JButton();
         novo = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JSeparator();
+        clearSearch = new javax.swing.JLabel();
+
+        jTextField1.setText("jTextField1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowFocusListener(new java.awt.event.WindowFocusListener() {
@@ -150,9 +189,9 @@ public class Proprietarios extends javax.swing.JFrame {
             propriedadesTable.getColumnModel().getColumn(1).setResizable(false);
         }
 
-        jPanel1.addContainerListener(new java.awt.event.ContainerAdapter() {
+        detalhesPanel.addContainerListener(new java.awt.event.ContainerAdapter() {
             public void componentRemoved(java.awt.event.ContainerEvent evt) {
-                jPanel1ComponentRemoved(evt);
+                detalhesPanelComponentRemoved(evt);
             }
         });
 
@@ -205,78 +244,78 @@ public class Proprietarios extends javax.swing.JFrame {
 
         jLabel8.setText("Nivel automação : ");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout detalhesPanelLayout = new javax.swing.GroupLayout(detalhesPanel);
+        detalhesPanel.setLayout(detalhesPanelLayout);
+        detalhesPanelLayout.setHorizontalGroup(
+            detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jSeparator1)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, detalhesPanelLayout.createSequentialGroup()
                 .addGap(10, 10, 10)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(buscarCidade, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(nomePropriedade))
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(produtos, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(produtos1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(92, 92, 92))
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(detalhesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(detalhesPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(prodAnualLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(prodButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, detalhesPanelLayout.createSequentialGroup()
+                        .addGroup(detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(destinoComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(empregadoSpinner))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(maquinasSpinner))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(nivelSpinner))))
                 .addGap(5, 5, 5))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        detalhesPanelLayout.setVerticalGroup(
+            detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(detalhesPanelLayout.createSequentialGroup()
                 .addGap(5, 5, 5)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(produtos1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(prodAnualLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addGroup(detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(nomePropriedade, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(buscarCidade, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(produtos, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(prodButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addGroup(detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel6)
                         .addComponent(jLabel7)
                         .addComponent(jLabel5)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nivelSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(empregadoSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(maquinasSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -286,11 +325,63 @@ public class Proprietarios extends javax.swing.JFrame {
                 .addGap(0, 0, 0))
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel5, jLabel6, jLabel7, jLabel8, maquinasSpinner});
+        detalhesPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel5, jLabel6, jLabel7, jLabel8, maquinasSpinner});
 
-        nivel.addTab("Nível 1", jPanel1);
-        nivel.addTab("Nível 2", jTabbedPane2);
-        nivel.addTab("Nível 3", jTabbedPane3);
+        nivel.addTab("Nível 1", detalhesPanel);
+
+        impostoTotalLabel.setText("Total");
+
+        impostoTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Valor R$", "Valor líquido R$", "Subsídio %", "Nome", "Esfera"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                true, true, true, true, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        impostoTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                impostoTableMouseReleased(evt);
+            }
+        });
+        jScrollPane2.setViewportView(impostoTable);
+
+        pagoRadioButton.setText("Pago");
+
+        javax.swing.GroupLayout impostoPanelLayout = new javax.swing.GroupLayout(impostoPanel);
+        impostoPanel.setLayout(impostoPanelLayout);
+        impostoPanelLayout.setHorizontalGroup(
+            impostoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 547, Short.MAX_VALUE)
+            .addGroup(impostoPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(impostoTotalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(pagoRadioButton)
+                .addContainerGap())
+        );
+        impostoPanelLayout.setVerticalGroup(
+            impostoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, impostoPanelLayout.createSequentialGroup()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addGroup(impostoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(impostoTotalLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(pagoRadioButton)))
+        );
+
+        nivel.addTab("Nível 2", impostoPanel);
 
         apagar.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
         apagar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/delete.png"))); // NOI18N
@@ -315,12 +406,12 @@ public class Proprietarios extends javax.swing.JFrame {
         });
 
         try {
-            jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.###/####-##")));
+            CPNJFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.###/####-##")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
-        jFormattedTextField1.setText("");
-        jFormattedTextField1.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
+        CPNJFormattedTextField.setText("");
+        CPNJFormattedTextField.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
 
         jLabel2.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
         jLabel2.setText("CNPJ :");
@@ -328,12 +419,12 @@ public class Proprietarios extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
         jLabel4.setText("Nome : ");
 
-        jTextField1.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
+        nomeTextField.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/search.png"))); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        searchPropriedades.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/search.png"))); // NOI18N
+        searchPropriedades.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                searchPropriedadesActionPerformed(evt);
             }
         });
 
@@ -355,6 +446,13 @@ public class Proprietarios extends javax.swing.JFrame {
             }
         });
 
+        clearSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/backspace.png"))); // NOI18N
+        clearSearch.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                clearSearchMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -372,13 +470,15 @@ public class Proprietarios extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addGap(4, 4, 4)
-                        .addComponent(jTextField1)
-                        .addGap(10, 10, 10)
+                        .addComponent(nomeTextField)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(CPNJFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(clearSearch)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(searchPropriedades, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(novo, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -401,14 +501,15 @@ public class Proprietarios extends javax.swing.JFrame {
                 .addGap(5, 5, 5)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(nomeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel4))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(CPNJFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(searchPropriedades, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(clearSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -419,7 +520,7 @@ public class Proprietarios extends javax.swing.JFrame {
                         .addContainerGap())))
         );
 
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jFormattedTextField1, jLabel2, jLabel4, jTextField1});
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {CPNJFormattedTextField, jLabel2, jLabel4, nomeTextField});
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -463,9 +564,9 @@ public class Proprietarios extends javax.swing.JFrame {
         return propriedade;
     }
 
-    private void jPanel1ComponentRemoved(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_jPanel1ComponentRemoved
+    private void detalhesPanelComponentRemoved(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_detalhesPanelComponentRemoved
         // TODO add your handling code here:
-    }//GEN-LAST:event_jPanel1ComponentRemoved
+    }//GEN-LAST:event_detalhesPanelComponentRemoved
 
     private void nomePropriedadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nomePropriedadeActionPerformed
         // TODO add your handling code here:
@@ -484,9 +585,10 @@ public class Proprietarios extends javax.swing.JFrame {
 //        this.salvarStatus = 1;
     }//GEN-LAST:event_novoActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        new Thread(readTableProprietarios).start();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void searchPropriedadesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchPropriedadesActionPerformed
+        propriedadesTable.clearSelection();
+        new Thread(readTables).start();
+    }//GEN-LAST:event_searchPropriedadesActionPerformed
 
     private void propriedadesTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_propriedadesTableMouseReleased
         proprietarioSelected();
@@ -506,6 +608,21 @@ public class Proprietarios extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_formWindowGainedFocus
 
+    private void clearSearchMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clearSearchMouseClicked
+        CPNJFormattedTextField.setText("");
+        nomeTextField.setText("");
+        new Thread(readTables).start();
+    }//GEN-LAST:event_clearSearchMouseClicked
+
+    private void impostoTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_impostoTableMouseReleased
+        int pago = impostos.get(impostoTable.getSelectedRow()).getPago();
+        if (pago == 1) {
+            pagoRadioButton.setSelected(true);
+        } else {
+            pagoRadioButton.setSelected(false);
+        }
+    }//GEN-LAST:event_impostoTableMouseReleased
+
     private String limitText(String text) {
         return limitText(text, 30);
     }
@@ -518,31 +635,34 @@ public class Proprietarios extends javax.swing.JFrame {
     }
 
     private void proprietarioSelected() {
-        toggleFields(false);
-        Communication communication = new Communication("PROPRIEDADESELECTED");
-        communication.setParam("propriedadeId", propriedades.get(propriedadesTable.getSelectedRow()).getPropriedadeId());
-        communication = server.outPut_inPut(communication);
-        currentPropriedade = (Propriedade) communication.getParam("PROPRIEDADESELECTEDREPLY");
-        nomePropriedade.setText(limitText(currentPropriedade.getNome(), 35));
         try {
-            buscarCidade.setText(limitText(currentPropriedade.getEndereco().getEndereco()));
-            buscarCidade.setToolTipText(limitText(currentPropriedade.getEndereco().getEndereco()));
-        } catch (NullPointerException ex) {
-            buscarCidade.setText("Selecione Endereço");
-            buscarCidade.setToolTipText("Selecione Endereço");
+            toggleFields(false);
+            Communication communication = new Communication("PROPRIEDADESELECTED");
+            communication.setParam("propriedadeId", propriedades.get(propriedadesTable.getSelectedRow()).getPropriedadeId());
+            communication = server.outPut_inPut(communication);
+            currentPropriedade = (Propriedade) communication.getParam("PROPRIEDADESELECTEDREPLY");
+            nomePropriedade.setText(limitText(currentPropriedade.getNome(), 35));
+            try {
+                buscarCidade.setText(limitText(currentPropriedade.getEndereco().getEndereco()));
+                buscarCidade.setToolTipText(limitText(currentPropriedade.getEndereco().getEndereco()));
+            } catch (NullPointerException ex) {
+                buscarCidade.setText("Selecione Endereço");
+                buscarCidade.setToolTipText("Selecione Endereço");
+            }
+            int destino = currentPropriedade.getDestino();
+            switch (destino) {
+                case 1:
+                    destinoComboBox.setSelectedIndex(0);
+                    break;
+                case 0:
+                    destinoComboBox.setSelectedIndex(1);
+                    break;
+            }
+            empregadoSpinner.setValue(currentPropriedade.getNumeroEmpregados());
+            maquinasSpinner.setValue(currentPropriedade.getMaquinas());
+            nivelSpinner.setValue(currentPropriedade.getNivelAutomacao());
+        } catch (ArrayIndexOutOfBoundsException ex) {
         }
-        int destino = currentPropriedade.getDestino();
-        switch (destino) {
-            case 1:
-                destinoComboBox.setSelectedIndex(0);
-                break;
-            case 0:
-                destinoComboBox.setSelectedIndex(1);
-                break;
-        }
-        empregadoSpinner.setValue(currentPropriedade.getNumeroEmpregados());
-        maquinasSpinner.setValue(currentPropriedade.getMaquinas());
-        nivelSpinner.setValue(currentPropriedade.getNivelAutomacao());
     }
 
     /**
@@ -550,13 +670,17 @@ public class Proprietarios extends javax.swing.JFrame {
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JFormattedTextField CPNJFormattedTextField;
     private javax.swing.JButton apagar;
     private javax.swing.JButton buscarCidade;
+    private javax.swing.JLabel clearSearch;
     private javax.swing.JComboBox<String> destinoComboBox;
+    private javax.swing.JPanel detalhesPanel;
     private javax.swing.JButton editar;
     private javax.swing.JSpinner empregadoSpinner;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JFormattedTextField jFormattedTextField1;
+    private javax.swing.JPanel impostoPanel;
+    private javax.swing.JTable impostoTable;
+    private javax.swing.JLabel impostoTotalLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -565,23 +689,24 @@ public class Proprietarios extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JTabbedPane jTabbedPane2;
-    private javax.swing.JTabbedPane jTabbedPane3;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JSpinner maquinasSpinner;
     private javax.swing.JTabbedPane nivel;
     private javax.swing.JSpinner nivelSpinner;
     private javax.swing.JTextField nomePropriedade;
+    private javax.swing.JTextField nomeTextField;
     private javax.swing.JButton novo;
+    private javax.swing.JRadioButton pagoRadioButton;
     private javax.swing.JTextField prodAnualLabel;
     private javax.swing.JButton prodButton;
     private javax.swing.JLabel produtos;
     private javax.swing.JLabel produtos1;
     private javax.swing.JTable propriedadesTable;
     private javax.swing.JButton salvar;
+    private javax.swing.JButton searchPropriedades;
     // End of variables declaration//GEN-END:variables
 }

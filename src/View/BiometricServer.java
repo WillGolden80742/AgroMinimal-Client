@@ -99,7 +99,7 @@ public class BiometricServer {
     public static void main(String[] args) {
         setMainServer();
         login = new Login();
-        new Proprietarios().setVisible(true);
+        new Propriedades().setVisible(true);
         try {
             UIManager.setLookAndFeel(new FlatDarkLaf());
         } catch (UnsupportedLookAndFeelException ex) {

@@ -263,7 +263,7 @@ public class Login extends javax.swing.JFrame {
         if (replyLogin.equals("OK")) {
             Authenticated auth = new Authenticated();
             auth.setLogin(nickName.getText());
-            new Proprietarios().setVisible(true);
+            new Propriedades().setVisible(true);
             setVisible(false);
         } else {
             messageLogin.setText(replyLogin);
