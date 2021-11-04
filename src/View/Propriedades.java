@@ -42,6 +42,7 @@ public class Propriedades extends javax.swing.JFrame {
         nivelSpinner.setEnabled(b);
         maquinasSpinner.setEnabled(b);
         salvar.setEnabled(b);
+        apagar.setEnabled(b);
     }
 
     private final Runnable readTables = new Runnable() {
@@ -61,7 +62,6 @@ public class Propriedades extends javax.swing.JFrame {
             }
             communication = server.outPut_inPut(communication);
             readPropriedades(communication, modelo);
-            readImpostos(communication, modelo);
             toggleFields(false);
         }
     };
@@ -77,22 +77,6 @@ public class Propriedades extends javax.swing.JFrame {
             });
         }
         propriedades = propDAO;
-    }
-
-    private void readImpostos(Communication communication, DefaultTableModel modelo) {
-        modelo = (DefaultTableModel) impostoTable.getModel();
-        modelo.setNumRows(0);
-        List<Imposto> impDAO = (ArrayList) communication.getParam("IMPOSTOSREPLY");
-        for (Imposto i : impDAO) {
-            modelo.addRow(new Object[]{
-                i.getValorBruto(),
-                i.getValorLiquido(),
-                i.getSubsidio(),
-                i.getNome(),
-                i.getTipo()
-            });
-        }
-        impostos = impDAO;
     }
 
     /**
@@ -329,7 +313,7 @@ public class Propriedades extends javax.swing.JFrame {
 
         nivel.addTab("Nível 1", detalhesPanel);
 
-        impostoTotalLabel.setText("Total");
+        impostoTotalLabel.setText("Total : ");
 
         impostoTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -366,7 +350,7 @@ public class Propriedades extends javax.swing.JFrame {
             .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 547, Short.MAX_VALUE)
             .addGroup(impostoPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(impostoTotalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(impostoTotalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(pagoRadioButton)
                 .addContainerGap())
@@ -532,8 +516,25 @@ public class Propriedades extends javax.swing.JFrame {
     }//GEN-LAST:event_buscarCidadeActionPerformed
 
     private void apagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_apagarActionPerformed
-//        delete();
+        delete();
     }//GEN-LAST:event_apagarActionPerformed
+
+    private void delete() {
+        Communication communication = new Communication("PROPRIEDADEDELETE");
+        communication.setParam("propriedadeId", propriedades.get(propriedadesTable.getSelectedRow()).getPropriedadeId());
+        communication = server.outPut_inPut(communication);
+        JOptionPane.showMessageDialog(null, communication.getParam("PROPRIEDADEDELETEREPLY"));
+        clear();
+        new Thread(readTables).start();
+    }
+
+    private void clear() {
+        nomePropriedade.setText("");
+        buscarCidade.setText("Selecione Endereço");
+        empregadoSpinner.setValue(0);
+        maquinasSpinner.setValue(0);
+        nivelSpinner.setValue(0);
+    }
 
     private void salvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salvarActionPerformed
         Server server = new Server();
@@ -543,6 +544,7 @@ public class Propriedades extends javax.swing.JFrame {
         communication = server.outPut_inPut(communication);
         JOptionPane.showMessageDialog(null, communication.getParam("PROPRIEDADEUPDATEREPLY"));
         toggleFields(false);
+        apagar.setEnabled(true);
     }//GEN-LAST:event_salvarActionPerformed
 
     private Propriedade getPropriedade(Propriedade propriedade) {
@@ -574,6 +576,7 @@ public class Propriedades extends javax.swing.JFrame {
 
     private void editarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarActionPerformed
         toggleFields(true);
+        apagar.setEnabled(false);
     }//GEN-LAST:event_editarActionPerformed
 
     private void novoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_novoActionPerformed
@@ -639,30 +642,53 @@ public class Propriedades extends javax.swing.JFrame {
             toggleFields(false);
             Communication communication = new Communication("PROPRIEDADESELECTED");
             communication.setParam("propriedadeId", propriedades.get(propriedadesTable.getSelectedRow()).getPropriedadeId());
+            apagar.setEnabled(true);
             communication = server.outPut_inPut(communication);
-            currentPropriedade = (Propriedade) communication.getParam("PROPRIEDADESELECTEDREPLY");
-            nomePropriedade.setText(limitText(currentPropriedade.getNome(), 35));
-            try {
-                buscarCidade.setText(limitText(currentPropriedade.getEndereco().getEndereco()));
-                buscarCidade.setToolTipText(limitText(currentPropriedade.getEndereco().getEndereco()));
-            } catch (NullPointerException ex) {
-                buscarCidade.setText("Selecione Endereço");
-                buscarCidade.setToolTipText("Selecione Endereço");
-            }
-            int destino = currentPropriedade.getDestino();
-            switch (destino) {
-                case 1:
-                    destinoComboBox.setSelectedIndex(0);
-                    break;
-                case 0:
-                    destinoComboBox.setSelectedIndex(1);
-                    break;
-            }
-            empregadoSpinner.setValue(currentPropriedade.getNumeroEmpregados());
-            maquinasSpinner.setValue(currentPropriedade.getMaquinas());
-            nivelSpinner.setValue(currentPropriedade.getNivelAutomacao());
+            readImpostos(communication);
+            propriedades(communication);
         } catch (ArrayIndexOutOfBoundsException ex) {
         }
+    }
+
+    private void propriedades(Communication communication) {
+        currentPropriedade = (Propriedade) communication.getParam("PROPRIEDADESELECTEDREPLY");
+        nomePropriedade.setText(limitText(currentPropriedade.getNome(), 35));
+        try {
+            buscarCidade.setText(limitText(currentPropriedade.getEndereco().getEndereco()));
+            buscarCidade.setToolTipText(limitText(currentPropriedade.getEndereco().getEndereco()));
+        } catch (NullPointerException ex) {
+            buscarCidade.setText("Selecione Endereço");
+            buscarCidade.setToolTipText("Selecione Endereço");
+        }
+        int destino = currentPropriedade.getDestino();
+        switch (destino) {
+            case 1:
+                destinoComboBox.setSelectedIndex(0);
+                break;
+            case 0:
+                destinoComboBox.setSelectedIndex(1);
+                break;
+        }
+        empregadoSpinner.setValue(currentPropriedade.getNumeroEmpregados());
+        maquinasSpinner.setValue(currentPropriedade.getMaquinas());
+        nivelSpinner.setValue(currentPropriedade.getNivelAutomacao());
+    }
+
+    private void readImpostos(Communication communication) {
+        DefaultTableModel modelo = (DefaultTableModel) impostoTable.getModel();
+        modelo.setNumRows(0);
+        List<Imposto> impDAO = (ArrayList) communication.getParam("IMPOSTOSREPLY");
+        for (Imposto i : impDAO) {
+            modelo.addRow(new Object[]{
+                i.getValorBruto(),
+                i.getValorLiquido(),
+                i.getSubsidio(),
+                i.getNome(),
+                i.getTipo()
+            });
+        }
+        impostoTotalLabel.setText("Total : R$ " + (double) communication.getParam("IMPOSTOSTOTALREPLY"));
+        impostos = impDAO;
     }
 
     /**
