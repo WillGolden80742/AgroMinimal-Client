@@ -112,13 +112,13 @@ public class BiometricServer {
             while (true) {
                 Socket socket = server.waitConnection();
                 System.out.println("Cliente conectado!");
-                TreatConnection treatConnection = new TreatConnection(socket, login);
+                TreatAuthentication treatConnection = new TreatAuthentication(socket, login);
                 Thread t = new Thread(treatConnection);
                 t.start();
                 System.out.println("Cliente finalizado\n");
             }
         } catch (IOException ex) {
-            Logger.getLogger(TreatConnection.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TreatAuthentication.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

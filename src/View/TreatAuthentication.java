@@ -20,7 +20,7 @@ import util.States;
  *
  * @author William
  */
-public class TreatConnection implements Runnable {
+public class TreatAuthentication implements Runnable {
 
     private Socket socket;
     private States states = States.CONNECTED;
@@ -28,7 +28,7 @@ public class TreatConnection implements Runnable {
     private static boolean auth;
     private static String welcome;
 
-    public TreatConnection(Socket socket, Login login) {
+    public TreatAuthentication(Socket socket, Login login) {
         this.socket = socket;
         this.login = login;
     }
@@ -54,13 +54,13 @@ public class TreatConnection implements Runnable {
         } catch (Exception ex) {
             System.out.println("Problema no tratamento da conexão com o cliente: " + socket.getInetAddress());
             System.out.println("Erro: " + ex.getMessage());
-            //Logger.getLogger(TreatConnection.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(TreatAuthentication.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             System.out.println("!!!Finalizando!!!");
             try {
                 closeSocket(socket);
             } catch (IOException ex) {
-                Logger.getLogger(TreatConnection.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(TreatAuthentication.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
