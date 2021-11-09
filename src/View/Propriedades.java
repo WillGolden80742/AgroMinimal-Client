@@ -105,6 +105,8 @@ public class Propriedades extends javax.swing.JFrame {
         }
         impostoTotalLabel.setText("Total : R$ " + (double) communication.getParam("IMPOSTOSTOTALREPLY"));
         Imposto i = new Imposto();
+        i.setValorBruto(0.0);
+        i.setSubsidio(0.0);
         impostos = impDAO;
         impostos.add(i);
     }
@@ -175,7 +177,7 @@ public class Propriedades extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                true, false
+                false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -579,7 +581,6 @@ public class Propriedades extends javax.swing.JFrame {
         Propriedade propriedade = getPropriedade(currentPropriedade);
         Communication communication = new Communication("PROPRIEDADECREATE");
         communication.setParam("propriedade", propriedade);
-        communication.setParam("imposto", impostos);
         communication = server.outPut_inPut(communication);
         JOptionPane.showMessageDialog(null, communication.getParam("PROPRIEDADECREATEREPLY"));
         toggleFields(false);
@@ -593,8 +594,17 @@ public class Propriedades extends javax.swing.JFrame {
         communication.setParam("propriedade", propriedade);
         communication = server.outPut_inPut(communication);
         JOptionPane.showMessageDialog(null, communication.getParam("PROPRIEDADEUPDATEREPLY"));
+        updateImposto(propriedade);
         toggleFields(false);
         apagar.setEnabled(true);
+    }
+
+    private void updateImposto(Propriedade p) {
+        Communication communication = new Communication("IMPOSTOUPDATE");
+        communication.setParam("propriedade", p);
+        communication.setParam("imposto", impostos);
+        communication = server.outPut_inPut(communication);
+        JOptionPane.showMessageDialog(null, communication.getParam("IMPOSTOUPDATEREPLY"));
     }
 
     private Propriedade getPropriedade(Propriedade propriedade) {
@@ -623,11 +633,13 @@ public class Propriedades extends javax.swing.JFrame {
     }//GEN-LAST:event_editarActionPerformed
 
     private void novoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_novoActionPerformed
+        nivel.setSelectedIndex(0);
         cnpj = new CNPJ(getLocation());
         cnpj.setVisible(true);
         actionCrud = 2;
         clear();
         toggleFields(true);
+        buscarCidade.setEnabled(false);
         apagar.setEnabled(false);
     }//GEN-LAST:event_novoActionPerformed
 
@@ -648,7 +660,7 @@ public class Propriedades extends javax.swing.JFrame {
         if (cnpj.cnpjChek == false) {
             toggleFields(false);
         } else {
-          currentPropriedade.setCpnj(cnpj.cnpj);
+            currentPropriedade.setCpnj(cnpj.cnpj);
         }
         try {
             if (!adress.isVisible() && propriedadesTable.getSelectedRow() >= 0) {
@@ -675,46 +687,21 @@ public class Propriedades extends javax.swing.JFrame {
 
     private void impostoTablePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_impostoTablePropertyChange
         try {
-            if (impostos.size() > 0) {
-                try {
-                    Imposto imposto = new Imposto();
-                    double percent = Double.parseDouble(String.valueOf(impostoTable.getValueAt(impostoTable.getSelectedRow(), 2)));
-                    double valor = Double.parseDouble(String.valueOf(impostoTable.getValueAt(impostoTable.getSelectedRow(), 0)));
-                    imposto.setSubsidio((int) ((percent > 100) ? 100 : percent));
-                    if (impostoTable.getSelectedColumn() == 2) {
-                        impostoTable.setValueAt(imposto.getSubsidio(), impostoTable.getSelectedRow(), impostoTable.getSelectedColumn());
-                    }
-                    imposto.setValorBruto(valor);
-                    impostos.set(impostoTable.getSelectedRow(), imposto);
-                } catch (NumberFormatException ex) {
-                    int perc = impostos.get(impostoTable.getSelectedRow()).getSubsidio();
-                    double val = impostos.get(impostoTable.getSelectedRow()).getValorBruto();
-                    impostoTable.setValueAt(val, impostoTable.getSelectedRow(), 0);
-                    impostoTable.setValueAt(perc, impostoTable.getSelectedRow(), 2);
-                } catch (ArrayIndexOutOfBoundsException ex) {
-                }
+            Imposto imposto = impostos.get(impostoTable.getSelectedRow());
+            double percent = Double.parseDouble(String.valueOf(impostoTable.getValueAt(impostoTable.getSelectedRow(), 2)));
+            double valor = Double.parseDouble(String.valueOf(impostoTable.getValueAt(impostoTable.getSelectedRow(), 0)));
+            imposto.setSubsidio(((percent > 100) ? 100 : percent));
+            if (impostoTable.getSelectedColumn() == 2) {
+                impostoTable.setValueAt(imposto.getSubsidio(), impostoTable.getSelectedRow(), impostoTable.getSelectedColumn());
             }
-        } catch (NullPointerException ex) {
-            try {
-                Imposto imposto = new Imposto();
-                String percentS = String.valueOf(impostoTable.getValueAt(impostoTable.getSelectedRow(), 2));
-                percentS = (percentS.equals("null")) ? "0" : percentS;
-                String valorS = String.valueOf(impostoTable.getValueAt(impostoTable.getSelectedRow(), 0));
-                valorS = (valorS.equals("null")) ? "0" : valorS;
-                int p = (int) Double.parseDouble(percentS);
-                p = ((p > 100) ? 100 : p);
-                if (impostoTable.getSelectedColumn() == 2) {
-                    impostoTable.setValueAt(p, impostoTable.getSelectedRow(), impostoTable.getSelectedColumn());
-                }
-                double percent = Double.parseDouble("" + p);
-                double valor = Double.parseDouble(valorS);
-                imposto.setSubsidio((int) percent);
-                imposto.setValorBruto(valor);
-                impostos.set(impostoTable.getSelectedRow(), imposto);
-            } catch (NumberFormatException ex1) {
-                impostoTable.setValueAt("", impostoTable.getSelectedRow(), impostoTable.getSelectedColumn());
-            } catch (ArrayIndexOutOfBoundsException ex1) {
-            }
+            imposto.setValorBruto(valor);
+            impostos.set(impostoTable.getSelectedRow(), imposto);
+        } catch (NumberFormatException ex) {
+            double perc = impostos.get(impostoTable.getSelectedRow()).getSubsidio();
+            double val = impostos.get(impostoTable.getSelectedRow()).getValorBruto();
+            impostoTable.setValueAt(val, impostoTable.getSelectedRow(), 0);
+            impostoTable.setValueAt(perc, impostoTable.getSelectedRow(), 2);
+        } catch (ArrayIndexOutOfBoundsException | NullPointerException ex) {
         }
     }//GEN-LAST:event_impostoTablePropertyChange
 
