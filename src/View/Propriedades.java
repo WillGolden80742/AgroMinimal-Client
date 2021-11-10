@@ -5,6 +5,8 @@
 package View;
 
 import ConnectionFactory.Server;
+import Model.bean.Agrotoxico;
+import Model.bean.Authenticated;
 import Model.bean.Imposto;
 import Model.bean.Propriedade;
 import java.util.ArrayList;
@@ -24,9 +26,12 @@ public class Propriedades extends javax.swing.JFrame {
     private Adress adress;
     private List<Propriedade> propriedades;
     private List<Imposto> impostos;
+    private List<Agrotoxico> agrotoxicos;
+    private List<Agrotoxico> agrotoxicosTotais;
     private Propriedade currentPropriedade = new Propriedade();
     private String CPNJDefault = "   .   .   /    -  ";
     private int actionCrud = 0;
+    private TipoSelect tipoSelect = new TipoSelect();
 
     public Propriedades() {
         initComponents();
@@ -34,6 +39,19 @@ public class Propriedades extends javax.swing.JFrame {
         new Thread(readTables).start();
         toggleFields(false);
     }
+
+    private final Runnable readAgroList = new Runnable() {
+        @Override
+        public void run() {
+            Communication communication = new Communication("AGROLIST");
+            communication = server.outPut_inPut(communication);
+            List<Agrotoxico> impDAO = (ArrayList) communication.getParam("AGROLISTREPLY");
+            for (Agrotoxico i : impDAO) {
+                agroComboBox.addItem(i.getNome() + " Ingrediente : " + i.getIngrediente());
+            }
+            agrotoxicosTotais = impDAO;
+        }
+    };
 
     private void toggleFields(boolean b) {
         buscarCidade.setEnabled(b);
@@ -67,6 +85,7 @@ public class Propriedades extends javax.swing.JFrame {
             communication = server.outPut_inPut(communication);
             readPropriedades(communication, modelo);
             toggleFields(false);
+            new Thread(readAgroList).start();
         }
     };
 
@@ -81,34 +100,6 @@ public class Propriedades extends javax.swing.JFrame {
             });
         }
         propriedades = propDAO;
-    }
-
-    private void readImpostos(Communication communication) {
-        DefaultTableModel modelo = (DefaultTableModel) impostoTable.getModel();
-        modelo.setNumRows(0);
-        List<Imposto> impDAO = (ArrayList) communication.getParam("IMPOSTOSREPLY");
-        int count = 0;
-        for (Imposto i : impDAO) {
-            modelo.addRow(new Object[]{
-                i.getValorBruto(),
-                i.getValorLiquido(),
-                i.getSubsidio(),
-                i.getNome(),
-                i.getTipo()
-            });
-            count++;
-        }
-        if (count == 0) {
-            modelo.setNumRows(1);
-        } else {
-            modelo.setNumRows(modelo.getColumnCount() - 1);
-        }
-        impostoTotalLabel.setText("Total : R$ " + (double) communication.getParam("IMPOSTOSTOTALREPLY"));
-        Imposto i = new Imposto();
-        i.setValorBruto(0.0);
-        i.setSubsidio(0.0);
-        impostos = impDAO;
-        impostos.add(i);
     }
 
     @SuppressWarnings("unchecked")
@@ -142,6 +133,13 @@ public class Propriedades extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         impostoTable = new javax.swing.JTable();
         pagoRadioButton = new javax.swing.JRadioButton();
+        editNomeButton = new javax.swing.JButton();
+        agrotoxicosPanel = new javax.swing.JPanel();
+        removeButton = new javax.swing.JToggleButton();
+        addButton = new javax.swing.JButton();
+        agroComboBox = new javax.swing.JComboBox<>();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        agroTable = new javax.swing.JTable();
         apagar = new javax.swing.JButton();
         salvar = new javax.swing.JButton();
         CPNJFormattedTextField = new javax.swing.JFormattedTextField();
@@ -153,6 +151,9 @@ public class Propriedades extends javax.swing.JFrame {
         novo = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JSeparator();
         clearSearch = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        editMenuItem = new javax.swing.JMenuItem();
 
         jTextField1.setText("jTextField1");
 
@@ -307,7 +308,7 @@ public class Propriedades extends javax.swing.JFrame {
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(produtos, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(prodButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(28, 28, 28)
                 .addGroup(detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -374,6 +375,14 @@ public class Propriedades extends javax.swing.JFrame {
             }
         });
 
+        editNomeButton.setText("Editar nome");
+        editNomeButton.setEnabled(false);
+        editNomeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editNomeButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout impostoPanelLayout = new javax.swing.GroupLayout(impostoPanel);
         impostoPanel.setLayout(impostoPanelLayout);
         impostoPanelLayout.setHorizontalGroup(
@@ -383,20 +392,76 @@ public class Propriedades extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(impostoTotalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(editNomeButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(pagoRadioButton)
                 .addContainerGap())
         );
         impostoPanelLayout.setVerticalGroup(
             impostoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, impostoPanelLayout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addGroup(impostoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(impostoTotalLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                    .addComponent(pagoRadioButton)))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(impostoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(impostoTotalLabel)
+                    .addGroup(impostoPanelLayout.createSequentialGroup()
+                        .addGroup(impostoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(editNomeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(pagoRadioButton))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
 
         nivel.addTab("Nível 2", impostoPanel);
+
+        removeButton.setText("Remover");
+
+        addButton.setText("Adicionar");
+
+        agroComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione o Agrotoxico" }));
+
+        agroTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "nome", "ativo"
+            }
+        ));
+        jScrollPane3.setViewportView(agroTable);
+
+        javax.swing.GroupLayout agrotoxicosPanelLayout = new javax.swing.GroupLayout(agrotoxicosPanel);
+        agrotoxicosPanel.setLayout(agrotoxicosPanelLayout);
+        agrotoxicosPanelLayout.setHorizontalGroup(
+            agrotoxicosPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(agrotoxicosPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(agrotoxicosPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE)
+                    .addGroup(agrotoxicosPanelLayout.createSequentialGroup()
+                        .addComponent(agroComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(addButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(removeButton)))
+                .addContainerGap())
+        );
+        agrotoxicosPanelLayout.setVerticalGroup(
+            agrotoxicosPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(agrotoxicosPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(agrotoxicosPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(removeButton)
+                    .addComponent(addButton)
+                    .addComponent(agroComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        nivel.addTab("Nível 3", agrotoxicosPanel);
 
         apagar.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
         apagar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/delete.png"))); // NOI18N
@@ -468,6 +533,20 @@ public class Propriedades extends javax.swing.JFrame {
             }
         });
 
+        jMenu1.setText("...");
+
+        editMenuItem.setText("Editar Perfil");
+        editMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu1.add(editMenuItem);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -508,8 +587,9 @@ public class Propriedades extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(nivel, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(4, 4, 4)
+                .addContainerGap()
+                .addComponent(nivel, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(editar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(novo, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -526,7 +606,7 @@ public class Propriedades extends javax.swing.JFrame {
                     .addComponent(searchPropriedades, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(clearSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(salvar)
@@ -589,6 +669,7 @@ public class Propriedades extends javax.swing.JFrame {
     }
 
     private void update() {
+        editNomeButton.setEnabled(false);
         Propriedade propriedade = getPropriedade(currentPropriedade);
         Communication communication = new Communication("PROPRIEDADEUPDATE");
         communication.setParam("propriedade", propriedade);
@@ -600,11 +681,21 @@ public class Propriedades extends javax.swing.JFrame {
     }
 
     private void updateImposto(Propriedade p) {
+        List<Imposto> impostoEdit = impostos;
         Communication communication = new Communication("IMPOSTOUPDATE");
-        communication.setParam("propriedade", p);
-        communication.setParam("imposto", impostos);
+        try {
+            if (impostoTable.getValueAt(impostoTable.getRowCount() - 1, 3).equals(null));
+        } catch (NullPointerException ex) {
+            if (impostoEdit.get(impostoTable.getRowCount() - 1).getValorBruto() > 0) {
+                JOptionPane.showMessageDialog(null, "Escolha o tipo do imposto!");
+            }
+            impostoEdit.get(impostoTable.getRowCount() - 1).setValorBruto(0.0);
+        }
+        communication.setParam("propriedadeId", p.getPropriedadeId());
+        communication.setParam("imposto", impostoEdit);
         communication = server.outPut_inPut(communication);
         JOptionPane.showMessageDialog(null, communication.getParam("IMPOSTOUPDATEREPLY"));
+
     }
 
     private Propriedade getPropriedade(Propriedade propriedade) {
@@ -657,9 +748,9 @@ public class Propriedades extends javax.swing.JFrame {
     }//GEN-LAST:event_propriedadesTableKeyReleased
 
     private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
-        if (cnpj.cnpjChek == false) {
+        if (cnpj.cnpjChek == false && actionCrud != 1) {
             toggleFields(false);
-        } else {
+        } else if (actionCrud == 2) {
             currentPropriedade.setCpnj(cnpj.cnpj);
         }
         try {
@@ -668,6 +759,13 @@ public class Propriedades extends javax.swing.JFrame {
             }
         } catch (NullPointerException ex) {
 
+        }
+        try {
+            impostoTable.setValueAt(tipoSelect.getCurrentTipo().getNome(), impostoTable.getSelectedRow(), 3);
+            impostoTable.setValueAt(tipoSelect.getCurrentTipo().getTipo(), impostoTable.getSelectedRow(), 4);
+            impostos.get(impostoTable.getSelectedRow()).setTipo(tipoSelect.getCurrentTipo());
+            tipoSelect.setCurrentTipo(null);
+        } catch (NullPointerException ex) {
         }
     }//GEN-LAST:event_formWindowGainedFocus
 
@@ -715,7 +813,22 @@ public class Propriedades extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_pagoRadioButtonMouseClicked
 
+    private void editNomeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editNomeButtonActionPerformed
+        tipoSelect.setLocation(getLocation());
+        tipoSelect.setVisible(true);
+    }//GEN-LAST:event_editNomeButtonActionPerformed
+
+    private void editMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editMenuItemActionPerformed
+        Authenticated authenticated = new Authenticated();
+        EditProfile editProfile = new EditProfile(authenticated.getLogin(), this);
+        editProfile.setLocation(getLocation());
+        editProfile.setVisible(true);
+    }//GEN-LAST:event_editMenuItemActionPerformed
+
     private void pago() {
+        if (actionCrud == 1) {
+            editNomeButton.setEnabled(true);
+        }
         try {
             int pago = impostos.get(impostoTable.getSelectedRow()).getPago();
             if (pago == 1) {
@@ -742,14 +855,16 @@ public class Propriedades extends javax.swing.JFrame {
 
     private void proprietarioSelected() {
         actionCrud = 0;
+        editNomeButton.setEnabled(false);
         try {
             toggleFields(false);
             Communication communication = new Communication("PROPRIEDADESELECTED");
             communication.setParam("propriedadeId", propriedades.get(propriedadesTable.getSelectedRow()).getPropriedadeId());
             apagar.setEnabled(true);
             communication = server.outPut_inPut(communication);
-            readImpostos(communication);
             propriedades(communication);
+            readImpostos(communication);
+            readAgrotoxicos(communication);
         } catch (ArrayIndexOutOfBoundsException ex) {
         }
     }
@@ -778,17 +893,63 @@ public class Propriedades extends javax.swing.JFrame {
         nivelSpinner.setValue(currentPropriedade.getNivelAutomacao());
     }
 
+    private void readImpostos(Communication communication) {
+        DefaultTableModel modelo = (DefaultTableModel) impostoTable.getModel();
+        modelo.setNumRows(0);
+        List<Imposto> impDAO = (ArrayList) communication.getParam("IMPOSTOSREPLY");
+        int count = 0;
+        for (Imposto i : impDAO) {
+            modelo.addRow(new Object[]{
+                i.getValorBruto(),
+                i.getValorLiquido(),
+                i.getSubsidio(),
+                i.getTipo().getNome(),
+                i.getTipo().getTipo()
+            });
+            count++;
+        }
+        if (count == 0) {
+            modelo.setNumRows(1);
+        } else {
+            modelo.setNumRows(modelo.getRowCount() + 1);
+        }
+        impostoTotalLabel.setText("Total : R$ " + (double) communication.getParam("IMPOSTOSTOTALREPLY"));
+        Imposto i = new Imposto();
+        i.setValorBruto(0.0);
+        i.setSubsidio(0.0);
+        impostos = impDAO;
+        impostos.add(i);
+    }
+
+    private void readAgrotoxicos(Communication communication) {
+        DefaultTableModel modelo = (DefaultTableModel) agroTable.getModel();
+        modelo.setNumRows(0);
+        List<Agrotoxico> impDAO = (ArrayList) communication.getParam("AGROREADREPLY");
+        for (Agrotoxico i : impDAO) {
+            modelo.addRow(new Object[]{
+                i.getNome(),
+                i.getIngrediente(),});
+        }
+        agrotoxicos = impDAO;
+    }
+
     /**
      * @param args the command line arguments
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JFormattedTextField CPNJFormattedTextField;
+    private javax.swing.JButton addButton;
+    private javax.swing.JComboBox<String> agroComboBox;
+    private javax.swing.JTable agroTable;
+    private javax.swing.JPanel agrotoxicosPanel;
     private javax.swing.JButton apagar;
     private javax.swing.JButton buscarCidade;
     private javax.swing.JLabel clearSearch;
     private javax.swing.JComboBox<String> destinoComboBox;
     private javax.swing.JPanel detalhesPanel;
+    private javax.swing.JMenuItem editMenuItem;
+    private javax.swing.JButton editNomeButton;
     private javax.swing.JButton editar;
     private javax.swing.JSpinner empregadoSpinner;
     private javax.swing.JPanel impostoPanel;
@@ -802,8 +963,11 @@ public class Propriedades extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTextField jTextField1;
@@ -819,6 +983,7 @@ public class Propriedades extends javax.swing.JFrame {
     private javax.swing.JLabel produtos;
     private javax.swing.JLabel produtos1;
     private javax.swing.JTable propriedadesTable;
+    private javax.swing.JToggleButton removeButton;
     private javax.swing.JButton salvar;
     private javax.swing.JButton searchPropriedades;
     // End of variables declaration//GEN-END:variables
