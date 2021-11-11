@@ -24,6 +24,7 @@ public class Propriedades extends javax.swing.JFrame {
     private Server server = new Server();
     private CNPJ cnpj;
     private Adress adress;
+    private DefaultTableModel agroModelo;
     private List<Propriedade> propriedades;
     private List<Imposto> impostos;
     private List<Agrotoxico> agrotoxicos;
@@ -62,6 +63,9 @@ public class Propriedades extends javax.swing.JFrame {
         nivelSpinner.setEnabled(b);
         maquinasSpinner.setEnabled(b);
         salvar.setEnabled(b);
+        agroComboBox.setEnabled(b);
+        addButton.setEnabled(b);
+        removeButton.setEnabled(b);
         impostoTable.setEnabled(b);
         apagar.setEnabled(b);
         pagoRadioButton.setEnabled(b);
@@ -201,6 +205,12 @@ public class Propriedades extends javax.swing.JFrame {
             propriedadesTable.getColumnModel().getColumn(1).setResizable(false);
         }
 
+        detalhesPanel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                detalhesPanelMousePressed(evt);
+            }
+        });
+
         jLabel1.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
         jLabel1.setText("Nome :");
 
@@ -308,7 +318,7 @@ public class Propriedades extends javax.swing.JFrame {
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(produtos, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(prodButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addGap(28, 28, 28)
+                .addGap(10, 10, 10)
                 .addGroup(detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -400,22 +410,31 @@ public class Propriedades extends javax.swing.JFrame {
         impostoPanelLayout.setVerticalGroup(
             impostoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, impostoPanelLayout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
                 .addGroup(impostoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(impostoTotalLabel)
-                    .addGroup(impostoPanelLayout.createSequentialGroup()
-                        .addGroup(impostoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(editNomeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(pagoRadioButton))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(impostoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(editNomeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(pagoRadioButton)))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         nivel.addTab("Nível 2", impostoPanel);
 
         removeButton.setText("Remover");
+        removeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeButtonActionPerformed(evt);
+            }
+        });
 
         addButton.setText("Adicionar");
+        addButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addButtonActionPerformed(evt);
+            }
+        });
 
         agroComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione o Agrotoxico" }));
 
@@ -429,7 +448,16 @@ public class Propriedades extends javax.swing.JFrame {
             new String [] {
                 "nome", "ativo"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        agroTable.setEnabled(false);
         jScrollPane3.setViewportView(agroTable);
 
         javax.swing.GroupLayout agrotoxicosPanelLayout = new javax.swing.GroupLayout(agrotoxicosPanel);
@@ -457,7 +485,7 @@ public class Propriedades extends javax.swing.JFrame {
                     .addComponent(addButton)
                     .addComponent(agroComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -588,8 +616,8 @@ public class Propriedades extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(nivel, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
+                .addComponent(nivel, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(editar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(novo, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -645,6 +673,10 @@ public class Propriedades extends javax.swing.JFrame {
         empregadoSpinner.setValue(0);
         maquinasSpinner.setValue(0);
         nivelSpinner.setValue(0);
+        DefaultTableModel modelo = (DefaultTableModel) impostoTable.getModel();
+        modelo.setNumRows(0);
+        agroModelo = (DefaultTableModel) agroTable.getModel();
+        agroModelo.setNumRows(0);
     }
 
     private void salvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salvarActionPerformed
@@ -669,18 +701,39 @@ public class Propriedades extends javax.swing.JFrame {
     }
 
     private void update() {
-        editNomeButton.setEnabled(false);
         Propriedade propriedade = getPropriedade(currentPropriedade);
-        Communication communication = new Communication("PROPRIEDADEUPDATE");
-        communication.setParam("propriedade", propriedade);
-        communication = server.outPut_inPut(communication);
-        JOptionPane.showMessageDialog(null, communication.getParam("PROPRIEDADEUPDATEREPLY"));
-        updateImposto(propriedade);
+        switch (nivel.getSelectedIndex()) {
+            case 0:
+                JOptionPane.showMessageDialog(null, updatePropriedade(propriedade));
+                break;
+            case 1:
+                JOptionPane.showMessageDialog(null, updateImposto(propriedade));
+                break;
+            case 2:
+                JOptionPane.showMessageDialog(null, updateAgrotoxico(propriedade));
+                break;
+        }
         toggleFields(false);
+        editNomeButton.setEnabled(false);
         apagar.setEnabled(true);
     }
 
-    private void updateImposto(Propriedade p) {
+    private String updatePropriedade(Propriedade propriedade) {
+        Communication communication = new Communication("PROPRIEDADEUPDATE");
+        communication.setParam("propriedade", propriedade);
+        communication = server.outPut_inPut(communication);
+        return (String) communication.getParam("PROPRIEDADEUPDATEREPLY");
+    }
+
+    private String updateAgrotoxico(Propriedade p) {
+        Communication communication = new Communication("AGROUPDATE");
+        communication.setParam("propriedadeId", p.getPropriedadeId());
+        communication.setParam("agrotoxicos", agrotoxicos);
+        communication = server.outPut_inPut(communication);
+        return (String) communication.getParam("AGROUPDATEREPLY");
+    }
+
+    private String updateImposto(Propriedade p) {
         List<Imposto> impostoEdit = impostos;
         Communication communication = new Communication("IMPOSTOUPDATE");
         try {
@@ -694,8 +747,7 @@ public class Propriedades extends javax.swing.JFrame {
         communication.setParam("propriedadeId", p.getPropriedadeId());
         communication.setParam("imposto", impostoEdit);
         communication = server.outPut_inPut(communication);
-        JOptionPane.showMessageDialog(null, communication.getParam("IMPOSTOUPDATEREPLY"));
-
+        return (String) communication.getParam("IMPOSTOUPDATEREPLY");
     }
 
     private Propriedade getPropriedade(Propriedade propriedade) {
@@ -825,6 +877,51 @@ public class Propriedades extends javax.swing.JFrame {
         editProfile.setVisible(true);
     }//GEN-LAST:event_editMenuItemActionPerformed
 
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
+        if (agroComboBox.getSelectedIndex() > 0) {
+            Agrotoxico agro = agrotoxicosTotais.get(agroComboBox.getSelectedIndex() - 1);
+            int count = 0;
+            for (Agrotoxico a : agrotoxicos) {
+                if (a.getAgroId() == agro.getAgroId()) {
+                    count++;
+                }
+            }
+            if (count == 0) {
+                agroModelo.addRow(new Object[]{
+                    agro.getNome(),
+                    agro.getIngrediente()
+                });
+                agrotoxicos.add(agro);
+            }
+        }
+    }//GEN-LAST:event_addButtonActionPerformed
+
+    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
+        if (agroComboBox.getSelectedIndex() > 0) {
+            Agrotoxico agro = agrotoxicosTotais.get(agroComboBox.getSelectedIndex() - 1);
+            int count = 0;
+            for (Agrotoxico a : agrotoxicos) {
+                if (a.getAgroId() == agro.getAgroId()) {
+                    count++;
+                }
+            }
+            if (count == 1) {
+                agroModelo.setNumRows(0);
+                agrotoxicos.remove(agro);
+                for (Agrotoxico a : agrotoxicos) {
+                    agroModelo.addRow(new Object[]{
+                        a.getNome(),
+                        a.getIngrediente()
+                    });
+                }
+            }
+        }
+    }//GEN-LAST:event_removeButtonActionPerformed
+
+    private void detalhesPanelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_detalhesPanelMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_detalhesPanelMousePressed
+
     private void pago() {
         if (actionCrud == 1) {
             editNomeButton.setEnabled(true);
@@ -855,6 +952,7 @@ public class Propriedades extends javax.swing.JFrame {
 
     private void proprietarioSelected() {
         actionCrud = 0;
+        agroComboBox.setSelectedIndex(0);
         editNomeButton.setEnabled(false);
         try {
             toggleFields(false);
@@ -922,13 +1020,23 @@ public class Propriedades extends javax.swing.JFrame {
     }
 
     private void readAgrotoxicos(Communication communication) {
-        DefaultTableModel modelo = (DefaultTableModel) agroTable.getModel();
-        modelo.setNumRows(0);
+        agroModelo = (DefaultTableModel) agroTable.getModel();
+        agroModelo.setNumRows(0);
         List<Agrotoxico> impDAO = (ArrayList) communication.getParam("AGROREADREPLY");
+        String message = "";
+        int count = 0;
         for (Agrotoxico i : impDAO) {
-            modelo.addRow(new Object[]{
+            if (i.getAprovado() == 0) {
+                message = "\"" + i.getNome() + "\",\n";
+                count++;
+            }
+            agroModelo.addRow(new Object[]{
                 i.getNome(),
                 i.getIngrediente(),});
+        }
+
+        if (count > 0 && nivel.getSelectedIndex() == 2) {
+            JOptionPane.showMessageDialog(null, message + " são agrotoxicos proibidos!");
         }
         agrotoxicos = impDAO;
     }

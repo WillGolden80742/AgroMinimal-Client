@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 03/11/2021 às 03:06
+-- Tempo de geração: 11/11/2021 às 04:30
 -- Versão do servidor: 10.4.21-MariaDB
 -- Versão do PHP: 8.0.10
 
@@ -50,15 +50,141 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `anexo`
+-- Estrutura para tabela `agrotoxico`
 --
 
-CREATE TABLE `anexo` (
-  `anexoId` int(20) NOT NULL,
-  `nome` varchar(260) DEFAULT '',
-  `arquivo` varchar(300) NOT NULL,
-  `mensagem` int(20) NOT NULL
+CREATE TABLE `agrotoxico` (
+  `agrotoxicoID` int(20) NOT NULL,
+  `nome` varchar(60) NOT NULL,
+  `ingredienteAtivo` varchar(30) NOT NULL,
+  `aprovado` tinyint(4) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Despejando dados para a tabela `agrotoxico`
+--
+
+INSERT INTO `agrotoxico` (`agrotoxicoID`, `nome`, `ingredienteAtivo`, `aprovado`) VALUES
+(1, 'Azoxystrobin Técnico Nortox BR', 'Azoxistrobina', 1),
+(2, 'Azoxistrobina Técnico Adama', 'Azoxistrobina', 1),
+(3, 'Clorotalonil Técnico Gilmore', 'Clorotalonil', 1),
+(4, 'Metoxifenozide Técnico Nortox II', 'Metoxifenozida', 1),
+(5, 'Methoxyfenozide Técnico Rotam', 'Metoxifenozida', 1),
+(6, 'Methoxyfenozide Técnico Sino-Agri', 'Metoxifenozida', 1),
+(7, 'Methoxyfenozida Técnico Oxon', 'Metoxifenozida', 1),
+(8, 'Methoxyfenozide Técnico CHDS', 'Metoxifenozida', 0),
+(9, 'Acefato Técnico RL', 'Acefato', 1),
+(10, 'Mesotrione Técnico Rainbow', 'Mesotriona', 1),
+(11, 'Fipronil Técnico AK', 'Fipronil', 1),
+(12, 'Fipronil Técnico UN', 'Fipronil', 0),
+(13, 'Fipronil Técnico DN', 'Fipronil', 1),
+(14, 'Fipronil Técnico NAG', 'Fipronil', 1),
+(15, 'Fipronil S Técnico Helm', 'Fipronil', 1),
+(16, 'Fipronil Técnico AG', 'Fipronil', 0),
+(17, 'Fipronil Técnico DS', 'Fipronil', 1),
+(18, 'Fipronil Técnico Rawell', 'Fipronil', 1),
+(19, 'Metribuzim Técnico Proventis', 'Metribuzim', 1),
+(20, 'Metribuzim Técnico Adama', 'Metribuzim', 1),
+(21, 'Falgro Técnico', 'Ácido Giberélico', 1),
+(22, 'Indoxacarbe Técnico Sharda', 'Indoxacarbe', 0),
+(23, 'Cinetina Técnica', 'Cinetina', 1),
+(24, 'Indaziflam MRB Pré-Mistura', 'Indaziflam', 1),
+(25, 'Indaziflam IFT Pré-Mistura', 'Indaziflam', 1),
+(26, 'S-Metolacloro Técnico Cropchem', 'S-metolacloro', 1),
+(27, 'S-Metolachlor Técnico Agrogil', 'S-metolacloro', 0),
+(28, 'S-metolacloro Técnico Nortox', 'S-metolacloro', 1),
+(29, 'S-Metolaclor Técnico SD', 'S-metolacloro', 1),
+(30, 'S-Metolachlor Técnico Sino-Agri', 'S-metolacloro', 1),
+(31, 'S-metolacloro Técnico Adama Brasil', 'S-metolacloro', 1),
+(32, 'S-Metolacloro B Técnico Helm', 'S-metolacloro', 1),
+(33, 'Fipronil Técnico Sub', 'Fipronil', 1),
+(34, 'Folpete Tradecorp Técnico', 'Folpete', 1),
+(35, 'Simazina Técnico Mil', 'Simazina', 1),
+(36, 'Ciproconazol Técnico Rainbow', 'Ciproconazol', 0),
+(37, 'Simazina Técnico ZS', 'Simazina', 1),
+(38, 'Lufenurom Tradecorp Técnico', 'Lufenurom', 1),
+(39, 'Clorpirifós Técnico ADA', 'Clorpirifós', 1),
+(40, 'Isoxaflutol Tradecorp Técnico II', 'Isoxaflutol', 1),
+(41, 'Ácido Giberélico Técnico (GA3)', 'Ácido Giberélico', 1),
+(42, 'Glufosinato Técnico FW', 'Glufosinato - Sal de Amônio', 1),
+(43, 'Glufosinate Técnico Nortox II', 'Glufosinato - Sal de Amônio', 1),
+(44, 'Glufosinato de Amônio Técnico Sino-Agri', 'Glufosinato - Sal de Amônio', 1),
+(45, 'Glufosinato de Amônio Técnico Tide', 'Glufosinato - Sal de Amônio', 1),
+(46, 'Glufosinato de Amônio Técnico Biesterfeld', 'Glufosinato - Sal de Amônio', 1),
+(47, 'Glufosinato Técnico Dinagro', 'Glufosinato - Sal de Amônio', 1),
+(48, 'Glufosinato de Amônio Técnico Pilarquim', 'Glufosinato - Sal de Amônio', 1),
+(49, 'Glufosinate-Ammonium Técnico Rotam', 'Glufosinato - Sal de Amônio', 1),
+(50, 'Glufosinato Técnico CHD\'S', 'Glufosinato - Sal de Amônio', 1),
+(51, 'Fluazinam Técnico Crystal', 'Fluazinam', 1),
+(52, 'Isoxaflutol Tradecorp Técnico', 'Isoxaflutol', 0),
+(53, 'Isoxaflutol Técnico Ouro FIno', 'Isoxaflutol', 1),
+(54, 'Isoxaflutol Técnico Nortox II', 'Isoxaflutol', 1),
+(55, 'Ametrina Técnico Biorisk', 'Ametrina', 1),
+(56, 'Difenoconazol Técnico Adama', 'Difenoconazol', 1),
+(57, 'Difenoconazole Técnico Tagros', 'Difenoconazol', 1),
+(58, 'DIfenoconazole Técnico CCAB', 'Difenoconazol', 1),
+(59, 'Difenoconazole Técnico Cropchem II', 'Difenoconazol', 1),
+(60, 'Difenoconazole Técnico Nortox IV', 'Difenoconazol', 1),
+(61, 'Picloram Técnico RB', 'Picloram', 1),
+(62, 'Diflubenzuron Técnico OF', 'Diflubenzurom', 1),
+(63, 'Ciproconazole Técnico Nortox II', 'Ciproconazol', 1),
+(64, 'Lufenuron Técnico SC', 'Lufenurom', 1),
+(65, 'Dicamba Técnico CHD\'S', 'Dicamba', 1),
+(66, 'Dicamba Técnico SOGP', 'Dicamba', 1),
+(67, 'Dicamba Técnico Gharda', 'Dicamba', 1),
+(68, 'Dicamba Técnico CCAB', 'Dicamba', 1),
+(69, 'Dicamba Técnico Sulphur Mills', 'Dicamba', 1),
+(70, 'Dicamba Técnico Monsanto I', 'Dicamba', 1),
+(71, 'Dicamba Técnico Albaugh GH', 'Dicamba', 1),
+(72, 'Dicamba Técnico Ouro Fino', 'Dicamba', 1),
+(73, 'Bifentrina Técnico Ouro Fino', 'Bifentrina', 1),
+(74, 'Azoxistrobina Técnico BRA', 'Azoxistrobina', 1),
+(75, 'Diquate Técnico Vanon', 'Diquate', 1),
+(76, 'Diquat Técnico CCAB III', 'Diquate', 1),
+(77, 'Diquat Técnico CropChem II', 'Diquate', 1),
+(78, 'Ciproconazol Técnico CHDS', 'Ciproconazol', 1),
+(79, 'Mesotrione Técnico Albaugh', 'Mesotriona', 1),
+(80, 'Tebuconazol Técnico Adama 3', 'Tebuconazol', 1),
+(81, 'Azoxistrobina Técnico Adama 2', 'Azoxistrobina', 1),
+(82, 'Bifentrina Técnico BR Cropchem', 'Bifentrina', 1),
+(83, 'Bifenthrin Técnico CCAB', 'Bifentrina', 1),
+(84, 'Bifentrina Técnica Nortox', 'Bifentrina', 1),
+(85, 'Bifenthrin Técnico Bharat', 'Bifentrina', 1),
+(86, 'Thiametoxam Técnico United', 'Tiametoxam', 1),
+(87, 'Imidacloprid Yécnico CHD\'S', 'Imidacloprido', 1),
+(88, 'Acefato Técnico FB', 'Acefato', 1),
+(89, 'Diquat Técnico FB', 'Diquate', 1),
+(90, 'Diquat Técnico NGC', 'Diquate', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `agrotoxicoPropriedade`
+--
+
+CREATE TABLE `agrotoxicoPropriedade` (
+  `agrotoxicoPropriedadeID` int(20) NOT NULL,
+  `propriedade` int(20) NOT NULL,
+  `agrotoxico` int(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Despejando dados para a tabela `agrotoxicoPropriedade`
+--
+
+INSERT INTO `agrotoxicoPropriedade` (`agrotoxicoPropriedadeID`, `propriedade`, `agrotoxico`) VALUES
+(1, 172, 81),
+(2, 172, 73),
+(3, 172, 30),
+(6, 5, 6),
+(7, 5, 1),
+(8, 5, 3),
+(9, 1, 2),
+(10, 1, 5),
+(11, 1, 6),
+(12, 2, 1),
+(13, 4, 3),
+(14, 6, 4);
 
 -- --------------------------------------------------------
 
@@ -102,7 +228,7 @@ INSERT INTO `clientes` (`nomeCliente`, `nickName`, `senha`, `deviceID`) VALUES
 ('pco', 'pco_cooperative', '24ebaad6df398839d63f29cb7eb3b971', '11'),
 ('Pepe BluePill', 'pepe_bluepill', 'd9002957b34ebefa020cca178bd46739', '12'),
 ('Rafael', 'rafa77', 'cbcc887b198ad392cd9f60027f27e37a', '13'),
-('Уильям Голден', 'willGolden', '69013773d31191dcc17bf195f73ef2e6', '6878be4f517024e6949952b684193481'),
+('Уильям Голден', 'willGolden', '21f804750eb82c9cde7d38673a6fa235', '6878be4f517024e6949952b684193481'),
 ('wololo', 'wololo', '89b44b8b1515dd349cce0b300029c054', '14');
 
 -- --------------------------------------------------------
@@ -125,7 +251,6 @@ CREATE TABLE `endereco` (
 INSERT INTO `endereco` (`propriedadeId`, `endereco`, `referencia`, `complemento`) VALUES
 (5, 'Alfredo Chaves', '8', '0'),
 (6, 'Alto Rio Novo', '8', '0'),
-(7, 'Anchieta', '8', '0'),
 (8, 'Apiacá', '8', '0'),
 (9, 'Aracruz', '8', '0'),
 (10, 'Atilio Vivacqua', '8', '0'),
@@ -287,7 +412,6 @@ INSERT INTO `endereco` (`propriedadeId`, `endereco`, `referencia`, `complemento`
 (169, 'Pariconha', '2', '0'),
 (170, 'Paripueira', '2', '0'),
 (171, 'Passo de Camaragibe', '2', '0'),
-(172, 'Paulo Jacinto', '2', '0'),
 (173, 'Penedo', '2', '0'),
 (174, 'Piaçabuçu', '2', '0'),
 (175, 'Pilar', '2', '0'),
@@ -1736,10 +1860,10 @@ INSERT INTO `endereco` (`propriedadeId`, `endereco`, `referencia`, `complemento`
 (1620, 'Bambuí', '11', '0'),
 (1621, 'Bandeira', '11', '0'),
 (1622, 'Bandeira do Sul', '11', '0'),
-(1623, 'Barão de Cocais', '11', '0');
-INSERT INTO `endereco` (`propriedadeId`, `endereco`, `referencia`, `complemento`) VALUES
+(1623, 'Barão de Cocais', '11', '0'),
 (1624, 'Barão de Monte Alto', '11', '0'),
-(1625, 'Barbacena', '11', '0'),
+(1625, 'Barbacena', '11', '0');
+INSERT INTO `endereco` (`propriedadeId`, `endereco`, `referencia`, `complemento`) VALUES
 (1626, 'Barra Longa', '11', '0'),
 (1627, 'Barroso', '11', '0'),
 (1628, 'Bela Vista de Minas', '11', '0'),
@@ -1966,7 +2090,9 @@ INSERT INTO `endereco` (`propriedadeId`, `endereco`, `referencia`, `complemento`
 (5560, ' R. Michel da Silva - Sacomã, São Paulo - SP, 04231-025, Brasil', '', ''),
 (5558, ' Estr. das Lágrimas, São Paulo, 09642-000, Brasil', '', ''),
 (22, ' Divino de São Lourenço - ES, Brasil', '8', '0'),
-(20, ' Conceição da Barra - ES, Brasil', '8', '0');
+(20, ' Conceição da Barra - ES, Brasil', '8', '0'),
+(172, ' R. Alm. Nunes - Sacomã, São Paulo - SP, 04231-000, Brasil', '2', '0'),
+(7, 'Rua Almirante Nunes', '8', '0');
 
 -- --------------------------------------------------------
 
@@ -1989,104 +2115,20 @@ CREATE TABLE `impostos` (
 --
 
 INSERT INTO `impostos` (`impostoID`, `propriedadeId`, `valor`, `tipo`, `subsidio`, `pago`, `lancamento`) VALUES
-(4, 172, 454554, 8, 50, 1, '2021-03-06 22:48:24'),
-(5, 172, 454, 9, 50, 0, '2021-03-07 22:48:24'),
-(6, 172, 44343, 11, 75, 0, '2021-03-08 22:48:24');
-
--- --------------------------------------------------------
-
---
--- Estrutura para tabela `messages`
---
-
-CREATE TABLE `messages` (
-  `Idmessage` int(20) NOT NULL,
-  `Messages` varchar(500) NOT NULL,
-  `MsgFrom` varchar(20) NOT NULL,
-  `MsgTo` varchar(20) NOT NULL,
-  `Date` varchar(20) NOT NULL DEFAULT current_timestamp(),
-  `received` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Despejando dados para a tabela `messages`
---
-
-INSERT INTO `messages` (`Idmessage`, `Messages`, `MsgFrom`, `MsgTo`, `Date`, `received`) VALUES
-(9, 'E ai bl? Cara', 'ally77', 'willGolden', '2021-03-06 22:48:24', 1),
-(10, 'Blz sim', 'willGolden', 'ally77', '2021-03-06 22:48:24', 1),
-(11, 'E ai blz cara?', 'marlon77', 'willGolden', '2021-03-07 22:48:24', 1),
-(12, 'blz sim mano ', 'willGolden', 'marlon77', '2021-03-07 22:48:24', 1),
-(13, 'E ai mano, blz?', 'rafa77', 'willGolden', '2021-03-08 22:48:24', 1),
-(15, 'Maravilha então', 'rafa77', 'willGolden', '2021-03-09 22:48:24', 1),
-(16, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'rafa77', 'willGolden', '2021-03-10 18:27:19', 1),
-(19, 'E ai Rafa. Blz?', 'willGolden', 'rafa77', '2021-03-10 21:09:34', 1),
-(20, 'E ai Will. Blz? ', 'rafa77', 'willGolden', '2021-03-10 21:10:05', 1),
-(21, 'E ai Will. Blz? ', 'rafa77', 'willGolden', '2021-03-10 21:10:10', 1),
-(24, 'E ai Marlon? ', 'willGolden', 'marlon77', '2021-03-10 21:16:40', 1),
-(25, 'E ai Ally. Blz? ', 'willGolden', 'ally77', '2021-03-10 21:20:09', 1),
-(26, 'E ai Will. Blz?', 'ally77', 'willGolden', '2021-03-10 21:27:36', 1),
-(27, 'blz mano', 'willGolden', 'ally77', '2021-03-10 21:40:20', 1),
-(28, 'maravilha entao ', 'ally77', 'willGolden', '2021-03-10 21:40:29', 1),
-(29, 'E ai ', 'willGolden', 'ally77', '2021-03-10 21:42:18', 1),
-(30, 'To bem mano. E vc?', 'marlon77', 'willGolden', '2021-03-11 02:58:31', 1),
-(31, 'To tranquilo', 'willGolden', 'marlon77', '2021-03-11 02:58:43', 1),
-(32, 'Que ótimo então', 'marlon77', 'willGolden', '2021-03-11 02:59:05', 1),
-(33, 'Ainda bem ', 'marlon77', 'willGolden', '2021-03-11 03:00:58', 1),
-(34, 'E vc como está?', 'willGolden', 'marlon77', '2021-03-11 03:10:43', 1),
-(35, 'To bem ', 'marlon77', 'willGolden', '2021-03-11 03:10:52', 1),
-(36, 'Ok então', 'marlon77', 'willGolden', '2021-03-11 03:11:07', 1),
-(39, 'blz mano', 'ally77', 'willGolden', '2021-03-11 18:28:45', 1),
-(40, 'Como vc tá?', 'ally77', 'willGolden', '2021-03-11 18:28:47', 1),
-(41, 'Traquilo', 'willGolden', 'ally77', '2021-03-11 18:29:47', 1),
-(43, 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop', 'ally77', 'willGolden', '2021-03-12 13:03:03', 1),
-(44, '(҂`_´)\n         <,︻╦̵̵̿╤─ ҉     ~  •\n█۞███████]▄▄▄▄▄▄▄▄▄▄▃ ●●●\n▂▄▅█████████▅▄▃▂…\n[███████████████████]\n◥⊙▲⊙▲⊙▲⊙▲⊙▲⊙▲⊙\n', 'willGolden', 'rafa77', '2021-03-12 16:52:45', 1),
-(240, 'Daora', 'ally77', 'willGolden', '2021-03-27 18:45:20', 1),
-(243, 'E ai Will\r\n', 'rafa77', 'willGolden', '2021-03-30 14:37:11', 1),
-(245, 'Olá', 'juhMonique', 'willGolden', '2021-03-30 14:41:48', 1),
-(246, 'E ai ', 'LoboDaEstepe', 'willGolden', '2021-03-30 14:41:48', 1),
-(371, 'Como está?\r\n', 'willGolden', 'mayumi_Sato', '2021-04-02 02:23:19', 1),
-(378, 'Se você não gosta do wolverine, eu sugiro que', 'willGolden', 'logan77', '2021-04-02 14:13:53', 1),
-(417, 'Bom dia\r\n', 'hong_kong77', 'willGolden', '2021-04-03 12:15:28', 1),
-(431, 'Olá\r\n', 'hong_kong77', 'rafa77', '2021-04-03 13:29:07', 1),
-(433, 'Olá, camarada\r\n', 'gvmmo', 'willGolden', '2021-04-03 20:38:43', 1),
-(628, 'Como vai?\r\n', 'rafa77', 'hong_kong77', '2021-04-06 00:15:41', 1),
-(943, 'Tudo bem?\r\n', 'willGolden', 'gvmmo', '2021-04-09 22:15:42', 1),
-(947, '', 'willGolden', 'gvmmo', '2021-04-09 22:23:57', 1),
-(949, '', 'gvmmo', 'willGolden', '2021-04-09 22:31:35', 1),
-(970, '', 'hong_kong77', 'willGolden', '2021-04-09 23:01:11', 1),
-(980, '', 'hong_kong77', 'willGolden', '2021-04-09 23:25:19', 1),
-(981, 'ola\r\n', 'willGolden', 'hong_kong77', '2021-04-09 23:25:37', 1),
-(982, '', 'gvmmo', 'willGolden', '2021-04-09 23:27:20', 1),
-(983, 'Como vai?\r\n', 'gvmmo', 'hong_kong77', '2021-04-09 23:49:50', 1),
-(994, 'Tudo certo por aqui\r\n', 'willGolden', 'gvmmo', '2021-04-10 11:45:53', 1),
-(995, '', 'gvmmo', 'willGolden', '2021-04-10 11:47:12', 1),
-(997, '', 'willGolden', 'gvmmo', '2021-04-10 12:38:59', 1),
-(998, '', 'willGolden', 'gvmmo', '2021-04-10 12:39:52', 1),
-(999, '', 'willGolden', 'gvmmo', '2021-04-10 14:30:25', 1),
-(1001, 'Ola\r\n', 'willGolden', 'gvmmo', '2021-04-10 15:28:09', 1),
-(1024, '', 'willGolden', 'gvmmo', '2021-04-10 20:25:49', 1),
-(1027, '', 'willGolden', 'gvmmo', '2021-04-10 20:32:00', 1),
-(1031, 'Como vai?\r\n', 'pco_cooperative', 'willGolden', '2021-04-11 13:19:39', 1),
-(1034, 'E ai?\r\n', 'willGolden', 'rafa77', '2021-04-11 15:38:14', 1),
-(1035, 'Tudo bem?\r\n', 'willGolden', 'rafa77', '2021-04-11 15:38:57', 1),
-(1036, 'Como vai?\r\n', 'willGolden', 'rafa77', '2021-04-11 15:44:29', 1),
-(1037, '', 'willGolden', 'rafa77', '2021-04-11 19:35:52', 1),
-(1038, '', 'willGolden', 'rafa77', '2021-04-11 20:09:59', 1),
-(1039, '', 'willGolden', 'rafa77', '2021-04-11 20:15:39', 1),
-(1043, 'Olá\r\n', 'wololo', 'rafa77', '2021-04-16 23:02:37', 1),
-(1044, '', 'willGolden', 'mayumi_Sato', '2021-04-17 17:16:10', 1),
-(1188, 'Olá\r\n', 'willGolden', 'mayumi_Sato', '2021-04-18 19:49:44', 1),
-(1190, 'Olá\r\n', 'willGolden', 'mayumi_Sato', '2021-04-18 19:51:39', 1),
-(1218, 'Como vai\r\n', 'gvmmo', 'willGolden', '2021-04-18 20:42:34', 1),
-(1219, 'Olá\r\n', 'gvmmo', 'willGolden', '2021-04-18 20:42:46', 1),
-(1221, 'Houve erro?\r\n', 'gvmmo', 'willGolden', '2021-04-18 20:43:21', 1),
-(1222, 'Engraçado\r\n', 'gvmmo', 'hong_kong77', '2021-04-18 20:43:36', 1),
-(1223, 'Olá\n', 'willGolden', 'rafa77', '2021-10-11 22:10:37', 0),
-(1224, '', 'willGolden', 'rafa77', '2021-10-14 23:21:48', 0),
-(1227, '', 'willGolden', 'rafa77', '2021-10-14 23:23:19', 0),
-(1228, '', 'willGolden', 'rafa77', '2021-10-14 23:23:36', 0),
-(1230, '', 'willGolden', 'rafa77', '2021-10-14 23:24:19', 0);
+(4, 172, 44342, 8, 75, 1, '2021-03-06 22:48:24'),
+(5, 172, 2443, 9, 20, 0, '2021-03-07 22:48:24'),
+(6, 172, 999.7, 11, 22, 1, '2021-03-08 22:48:24'),
+(7, 4, 435, 2, 0, 0, '2021-11-09 21:39:50'),
+(8, 4, 3453, 3, 0, 0, '2021-11-09 21:41:04'),
+(9, 4, 345, 1, 0, 0, '2021-11-09 21:44:02'),
+(10, 4, 4, 5, 0, 0, '2021-11-09 21:44:35'),
+(11, 1, 5, 4, 0, 1, '2021-11-09 21:46:31'),
+(12, 1, 132, 4, 0, 1, '2021-11-09 21:47:13'),
+(13, 1, 44, 3, 46, 0, '2021-11-09 22:02:15'),
+(14, 1, 44, 3, 0, 0, '2021-11-09 22:02:16'),
+(15, 1, 44, 3, 0, 0, '2021-11-09 22:02:17'),
+(16, 2, 435, 2, 0, 0, '2021-11-09 22:29:48'),
+(17, 7, 435, 4, 100, 0, '2021-11-11 00:21:07');
 
 -- --------------------------------------------------------
 
@@ -2128,8 +2170,8 @@ CREATE TABLE `propriedades` (
 --
 
 INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroEmpregados`, `maquinas`, `nivelAutomacao`) VALUES
-(1, '102.363.379/1496-75', 'Produção amargo – Sociedade Anônima ...', 0, 56, 23, 5),
-(2, '232.650.799/1736-95', 'Produção azedo – Sociedade em Conta de Participação', 1, 42, 11, 4),
+(1, '102.363.379/1496-75', 'Produção amargo - Sociedade Anônima ...', 0, 56, 23, 5),
+(2, '232.650.799/1736-95', 'Produção azedo – Sociedade em Conta ...', 1, 42, 11, 4),
 (3, '610.004.221/3371-56', 'Viveiro acre – Empresa de Pequeno P ...', 1, 46, 20, 5),
 (4, '269.957.867/1446-65', 'Rancho acetoso – Sociedade em Conta ...', 0, 75, 13, 0),
 (5, '150.321.852/6345-58', 'Cultura avinagrado – Empresa de Peq ...', 1, 58, 5, 0),
@@ -2299,11 +2341,11 @@ INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroE
 (169, '469.831.235/0688-35', 'Produção avinagrado – Empresário Individual.', 0, 91, 32, 2),
 (170, '746.905.724/3326-67', 'Capoeira agre – Sociedade em Comum', 0, 78, 10, 2),
 (171, '591.096.972/2493-89', 'Geração amargoso – Microempreendedor Individual', 0, 85, 26, 1),
-(172, '000.669.309/3044-03', 'Criação acre – Sociedade Anônima e Sociedade LTDA', 0, 82, 23, 1),
+(172, '000.669.309/3044-03', 'Criação acre – Sociedade Anônima e  ...', 0, 82, 23, 1),
 (173, '743.726.021/9729-61', 'Viveiro amargoso – Empresário Individual.', 1, 61, 27, 1),
 (174, '789.259.574/8250-98', 'Viveiro amargoso – Sociedade em Comum', 1, 85, 11, 3),
 (175, '134.378.192/8078-31', 'Criação picante – Empresário Individual.', 1, 27, 26, 2),
-(176, '495.037.343/2286-23', 'Viveiro picante – Sociedade em Conta de Participação', 1, 33, 4, 1),
+(176, '495.037.343/2286-23', 'Viveiro picante – Sociedade em Cont ...', 1, 33, 4, 1),
 (177, '516.871.877/5106-98', 'Rancho amargoso – Empresa de Pequeno Porte', 1, 70, 15, 4),
 (178, '587.363.866/4947-58', 'Viveiro acetoso – A Microempresa', 1, 81, 15, 3),
 (179, '696.348.890/8662-61', 'Capoeira avinagrado – Sociedade em Comum', 1, 55, 21, 5),
@@ -2553,7 +2595,7 @@ INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroE
 (423, '795.870.571/0633-58', 'Capoeira amaro – Sociedade em Conta de Participação', 0, 53, 31, 1),
 (424, '011.773.378/1572-91', 'Criação azedo – Sociedade em Comum', 1, 62, 4, 3),
 (425, '434.711.226/3394-49', 'Capoeira amargoso – Sociedade Anônima e Sociedade LTDA', 0, 90, 7, 3),
-(426, '329.001.517/6449-06', 'Produção agre – Empresa de Pequeno Porte', 0, 19, 19, 3),
+(426, '329.001.517/6449-06', 'Produção agre – Empresa de Pequeno  ...', 0, 19, 19, 3),
 (427, '131.977.844/1451-84', 'Cultura picante – Sociedade em Comum', 0, 64, 25, 3),
 (428, '150.724.931/8400-56', 'Produção agre – Sociedade em Comum', 1, 63, 7, 5),
 (429, '200.812.533/1735-12', 'Viveiro azedo – Microempreendedor Individual', 1, 78, 1, 1),
@@ -2626,10 +2668,7 @@ INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroE
 (496, '660.221.445/1957-47', 'Viveiro amargoso – Sociedade em Comum', 0, 69, 1, 3),
 (497, '551.847.023/4712-74', 'Rancho amaro – Empresário Individual.', 1, 49, 3, 5),
 (498, '864.585.708/7262-48', 'Rancho picante – Sociedade Anônima e Sociedade LTDA', 0, 41, 32, 4),
-(499, '438.346.223/1607-76', 'Rancho azedo – Empresário Individual.', 1, 55, 19, 4),
-(500, '557.874.617/9470-11', 'Capoeira amargoso – Empresa Individual de Responsabilidade Limitada', 0, 67, 17, 4),
 (501, '076.194.959/7948-91', 'Rancho amaro – Empresário Individual.', 1, 10, 1, 4),
-(502, '256.985.410/0485-64', 'Produção amargo – Microempreendedor Individual', 1, 17, 1, 1),
 (503, '095.226.100/2948-47', 'Criação acre – A Microempresa', 1, 94, 14, 1),
 (504, '394.590.271/1508-26', 'Criação picante – Sociedade em Comum', 1, 6, 1, 1),
 (505, '215.634.084/0958-01', 'Criação acetoso – Empresa de Pequeno Porte', 0, 77, 32, 5),
@@ -2680,12 +2719,12 @@ INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroE
 (550, '278.765.324/8209-89', 'Capoeira avinagrado – Microempreendedor Individual', 1, 2, 30, 4),
 (551, '088.317.917/8107-51', 'Geração amaro – Sociedade Anônima e Sociedade LTDA', 0, 45, 1, 5),
 (552, '386.830.098/5618-68', 'Produção apimentado – Empresa Individual de Responsabilidade Limitada', 1, 97, 16, 3),
-(553, '461.443.540/0927-62', 'Rancho apimentado – Sociedade em Conta de Participação', 0, 66, 5, 5);
-INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroEmpregados`, `maquinas`, `nivelAutomacao`) VALUES
+(553, '461.443.540/0927-62', 'Rancho apimentado – Sociedade em Conta de Participação', 0, 66, 5, 5),
 (554, '920.887.484/7943-02', 'Criação agre – Sociedade Anônima e Sociedade LTDA', 1, 91, 9, 2),
 (555, '730.935.357/4038-43', 'Criação avinagrado – Empresa de Pequeno Porte', 0, 69, 14, 5),
 (556, '352.737.839/9643-16', 'Rancho avinagrado – Empresa Individual de Responsabilidade Limitada', 1, 14, 6, 1),
-(557, '625.185.503/6732-31', 'Produção amargo – Sociedade em Conta de Participação', 0, 17, 13, 4),
+(557, '625.185.503/6732-31', 'Produção amargo – Sociedade em Conta de Participação', 0, 17, 13, 4);
+INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroEmpregados`, `maquinas`, `nivelAutomacao`) VALUES
 (558, '627.532.263/4221-01', 'Geração azedo – Microempreendedor Individual', 1, 12, 5, 4),
 (559, '361.792.726/7618-22', 'Criação picante – A Microempresa', 1, 31, 14, 0),
 (560, '890.402.295/0927-21', 'Capoeira acetoso – Sociedade Anônima e Sociedade LTDA', 1, 72, 22, 0),
@@ -3231,12 +3270,12 @@ INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroE
 (1100, '412.460.668/1702-84', 'Produção picante – Sociedade em Conta de Participação', 0, 26, 25, 3),
 (1101, '623.100.967/3996-58', 'Capoeira picante – Empresa de Pequeno Porte', 0, 87, 11, 0),
 (1102, '976.910.839/9850-96', 'Viveiro agre – Microempreendedor Individual', 1, 26, 8, 0),
-(1103, '748.229.182/1707-95', 'Viveiro acetoso – Sociedade em Conta de Participação', 1, 77, 26, 1);
-INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroEmpregados`, `maquinas`, `nivelAutomacao`) VALUES
+(1103, '748.229.182/1707-95', 'Viveiro acetoso – Sociedade em Conta de Participação', 1, 77, 26, 1),
 (1104, '799.958.167/8639-85', 'Capoeira amargoso – Empresa de Pequeno Porte', 1, 91, 22, 2),
 (1105, '464.830.103/9668-81', 'Criação acetoso – Sociedade em Comum', 0, 43, 32, 5),
 (1106, '524.898.836/9573-50', 'Produção acetoso – A Microempresa', 0, 40, 19, 5),
-(1107, '213.325.596/5985-54', 'Cultura amargoso – Sociedade Anônima e Sociedade LTDA', 1, 78, 12, 3),
+(1107, '213.325.596/5985-54', 'Cultura amargoso – Sociedade Anônima e Sociedade LTDA', 1, 78, 12, 3);
+INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroEmpregados`, `maquinas`, `nivelAutomacao`) VALUES
 (1108, '736.729.230/4388-68', 'Produção apimentado – A Microempresa', 0, 9, 12, 5),
 (1109, '611.730.908/9986-65', 'Rancho avinagrado – A Microempresa', 1, 6, 17, 1),
 (1110, '326.029.515/5462-61', 'Capoeira agre – Sociedade em Comum', 0, 98, 0, 4),
@@ -3775,12 +3814,12 @@ INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroE
 (1643, '575.161.143/0613-32', 'Viveiro acerbo – Sociedade em Comum', 1, 45, 5, 2),
 (1644, '524.630.297/0100-15', 'Produção amargo – Microempreendedor Individual', 1, 61, 8, 1),
 (1645, '091.232.285/6165-09', 'Capoeira amaro – Sociedade em Comum', 1, 56, 6, 3),
-(1646, '274.114.048/0648-57', 'Capoeira acerbo – A Microempresa', 1, 1, 29, 4);
-INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroEmpregados`, `maquinas`, `nivelAutomacao`) VALUES
+(1646, '274.114.048/0648-57', 'Capoeira acerbo – A Microempresa', 1, 1, 29, 4),
 (1647, '785.163.689/9604-51', 'Viveiro amargoso – Empresa Individual de Responsabilidade Limitada', 0, 57, 3, 2),
 (1648, '654.046.315/8726-96', 'Produção apimentado – Microempreendedor Individual', 0, 27, 29, 3),
 (1649, '152.559.066/2489-16', 'Criação acerbo – Sociedade em Comum', 1, 26, 17, 0),
-(1650, '933.342.448/2293-05', 'Produção agre – Sociedade em Comum', 1, 27, 2, 4),
+(1650, '933.342.448/2293-05', 'Produção agre – Sociedade em Comum', 1, 27, 2, 4);
+INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroEmpregados`, `maquinas`, `nivelAutomacao`) VALUES
 (1651, '454.438.931/7586-26', 'Capoeira acetoso – Sociedade em Comum', 0, 57, 27, 1),
 (1652, '852.379.131/8219-11', 'Cultura acetoso – Empresa de Pequeno Porte', 1, 62, 26, 0),
 (1653, '775.318.279/9230-31', 'Geração avinagrado – Empresa de Pequeno Porte', 1, 1, 12, 0),
@@ -4316,12 +4355,12 @@ INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroE
 (2183, '266.808.816/1895-68', 'Capoeira acre – Sociedade em Conta de Participação', 1, 39, 0, 1),
 (2184, '860.147.511/8757-98', 'Viveiro acetoso – A Microempresa', 0, 87, 14, 3),
 (2185, '449.810.294/1686-59', 'Viveiro acre – Empresa de Pequeno Porte', 0, 79, 24, 2),
-(2186, '067.780.882/5013-11', 'Geração acerbo – Empresa Individual de Responsabilidade Limitada', 0, 94, 20, 1);
-INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroEmpregados`, `maquinas`, `nivelAutomacao`) VALUES
+(2186, '067.780.882/5013-11', 'Geração acerbo – Empresa Individual de Responsabilidade Limitada', 0, 94, 20, 1),
 (2187, '203.900.248/2386-01', 'Produção acerbo – Microempreendedor Individual', 1, 5, 8, 2),
 (2188, '920.672.263/8940-12', 'Geração avinagrado – Microempreendedor Individual', 1, 70, 13, 4),
 (2189, '870.308.891/7307-23', 'Criação acerbo – Microempreendedor Individual', 1, 16, 21, 2),
-(2190, '808.039.965/5913-58', 'Cultura acerbo – A Microempresa', 0, 96, 20, 2),
+(2190, '808.039.965/5913-58', 'Cultura acerbo – A Microempresa', 0, 96, 20, 2);
+INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroEmpregados`, `maquinas`, `nivelAutomacao`) VALUES
 (2191, '903.104.489/9973-81', 'Cultura agre – Empresa de Pequeno Porte', 0, 48, 21, 4),
 (2192, '260.329.407/4924-07', 'Cultura amargo – A Microempresa', 1, 67, 20, 4),
 (2193, '896.294.896/3705-25', 'Produção amargoso – Empresário Individual.', 0, 26, 1, 0),
@@ -4862,11 +4901,11 @@ INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroE
 (2728, '149.018.298/5157-59', 'Criação apimentado – Empresário Individual.', 1, 22, 18, 1),
 (2729, '522.380.068/4104-39', 'Capoeira acerbo – Empresa Individual de Responsabilidade Limitada', 0, 78, 5, 5),
 (2730, '982.823.117/9537-28', 'Viveiro agre – A Microempresa', 0, 89, 20, 1),
-(2731, '187.603.254/0829-62', 'Criação acerbo – Empresa de Pequeno Porte', 0, 70, 8, 2);
-INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroEmpregados`, `maquinas`, `nivelAutomacao`) VALUES
+(2731, '187.603.254/0829-62', 'Criação acerbo – Empresa de Pequeno Porte', 0, 70, 8, 2),
 (2732, '631.713.036/3422-98', 'Capoeira avinagrado – Empresa Individual de Responsabilidade Limitada', 1, 0, 4, 0),
 (2733, '882.250.425/1603-91', 'Viveiro amaro – Microempreendedor Individual', 1, 88, 26, 3),
-(2734, '404.429.237/7974-90', 'Capoeira amargo – Empresa Individual de Responsabilidade Limitada', 1, 28, 7, 5),
+(2734, '404.429.237/7974-90', 'Capoeira amargo – Empresa Individual de Responsabilidade Limitada', 1, 28, 7, 5);
+INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroEmpregados`, `maquinas`, `nivelAutomacao`) VALUES
 (2735, '556.267.381/3044-39', 'Rancho avinagrado – A Microempresa', 0, 4, 26, 2),
 (2736, '784.582.240/2099-06', 'Viveiro picante – Empresa Individual de Responsabilidade Limitada', 0, 2, 29, 0),
 (2737, '473.244.002/1571-24', 'Cultura azedo – Empresa Individual de Responsabilidade Limitada', 0, 17, 26, 4),
@@ -5405,11 +5444,11 @@ INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroE
 (3270, '001.919.826/5239-03', 'Geração picante – Sociedade Anônima e Sociedade LTDA', 0, 39, 31, 5),
 (3271, '613.810.040/9488-35', 'Capoeira acetoso – A Microempresa', 1, 78, 18, 3),
 (3272, '769.009.261/7699-84', 'Cultura avinagrado – Sociedade em Conta de Participação', 1, 50, 24, 1),
-(3273, '026.931.508/1009-46', 'Rancho azedo – Empresário Individual.', 1, 23, 16, 1);
-INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroEmpregados`, `maquinas`, `nivelAutomacao`) VALUES
+(3273, '026.931.508/1009-46', 'Rancho azedo – Empresário Individual.', 1, 23, 16, 1),
 (3274, '365.556.920/9048-73', 'Capoeira amargo – Sociedade em Conta de Participação', 0, 73, 25, 0),
 (3275, '314.332.704/4682-42', 'Rancho acerbo – Sociedade Anônima e Sociedade LTDA', 1, 12, 14, 1),
-(3276, '089.696.575/4059-78', 'Criação apimentado – Sociedade em Comum', 0, 92, 7, 1),
+(3276, '089.696.575/4059-78', 'Criação apimentado – Sociedade em Comum', 0, 92, 7, 1);
+INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroEmpregados`, `maquinas`, `nivelAutomacao`) VALUES
 (3277, '611.186.645/1508-30', 'Rancho acerbo – Sociedade Anônima e Sociedade LTDA', 1, 15, 18, 2),
 (3278, '152.870.514/2218-34', 'Viveiro apimentado – Empresário Individual.', 1, 72, 19, 1),
 (3279, '051.178.798/5107-14', 'Criação azedo – Empresa Individual de Responsabilidade Limitada', 0, 35, 21, 5),
@@ -5946,11 +5985,11 @@ INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroE
 (3810, '189.367.045/5007-27', 'Capoeira picante – Sociedade Anônima e Sociedade LTDA', 0, 47, 15, 5),
 (3811, '101.526.121/9791-81', 'Viveiro picante – Empresa de Pequeno Porte', 0, 79, 22, 1),
 (3812, '018.203.047/0771-83', 'Viveiro acre – Sociedade Anônima e Sociedade LTDA', 1, 57, 20, 0),
-(3813, '756.517.549/1346-25', 'Cultura avinagrado – Empresário Individual.', 1, 11, 0, 2);
-INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroEmpregados`, `maquinas`, `nivelAutomacao`) VALUES
+(3813, '756.517.549/1346-25', 'Cultura avinagrado – Empresário Individual.', 1, 11, 0, 2),
 (3814, '011.290.396/1590-74', 'Geração avinagrado – Microempreendedor Individual', 0, 71, 2, 0),
 (3815, '089.617.455/5891-73', 'Cultura picante – Sociedade Anônima e Sociedade LTDA', 1, 65, 24, 5),
-(3816, '258.218.974/9843-14', 'Rancho amaro – A Microempresa', 0, 86, 2, 2),
+(3816, '258.218.974/9843-14', 'Rancho amaro – A Microempresa', 0, 86, 2, 2);
+INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroEmpregados`, `maquinas`, `nivelAutomacao`) VALUES
 (3817, '317.827.224/8931-47', 'Capoeira avinagrado – Empresário Individual.', 0, 43, 4, 3),
 (3818, '891.243.125/8612-78', 'Criação apimentado – Microempreendedor Individual', 1, 33, 7, 0),
 (3819, '229.688.745/9616-60', 'Criação agre – Empresa de Pequeno Porte', 1, 29, 12, 3),
@@ -6490,10 +6529,10 @@ INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroE
 (4353, '116.971.723/9129-02', 'Geração apimentado – Empresário Individual.', 1, 17, 8, 0),
 (4354, '527.927.664/1824-42', 'Rancho amaro – Sociedade em Comum', 1, 33, 3, 4),
 (4355, '276.898.888/4865-43', 'Rancho azedo – Empresário Individual.', 1, 44, 10, 2),
-(4356, '981.958.505/0745-16', 'Cultura amargo – A Microempresa', 0, 8, 13, 0);
-INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroEmpregados`, `maquinas`, `nivelAutomacao`) VALUES
+(4356, '981.958.505/0745-16', 'Cultura amargo – A Microempresa', 0, 8, 13, 0),
 (4357, '857.972.981/5898-61', 'Capoeira agre – Microempreendedor Individual', 0, 41, 21, 3),
-(4358, '824.087.962/0761-85', 'Produção picante – Sociedade em Comum', 0, 60, 30, 2),
+(4358, '824.087.962/0761-85', 'Produção picante – Sociedade em Comum', 0, 60, 30, 2);
+INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroEmpregados`, `maquinas`, `nivelAutomacao`) VALUES
 (4359, '130.456.130/3528-41', 'Capoeira amargoso – Sociedade Anônima e Sociedade LTDA', 1, 8, 25, 2),
 (4360, '074.583.753/2851-49', 'Viveiro avinagrado – Sociedade em Comum', 0, 79, 21, 1),
 (4361, '677.380.236/1925-84', 'Viveiro apimentado – Empresa Individual de Responsabilidade Limitada', 0, 78, 9, 0),
@@ -7034,10 +7073,10 @@ INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroE
 (4896, '760.207.665/3108-02', 'Produção amargoso – Sociedade em Comum', 0, 90, 19, 0),
 (4897, '238.060.691/9360-62', 'Viveiro acre – A Microempresa', 1, 23, 26, 4),
 (4898, '478.255.523/5123-19', 'Rancho apimentado – Sociedade em Comum', 1, 89, 8, 1),
-(4899, '010.401.889/3634-03', 'Viveiro amargo – Microempreendedor Individual', 1, 68, 23, 4);
-INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroEmpregados`, `maquinas`, `nivelAutomacao`) VALUES
+(4899, '010.401.889/3634-03', 'Viveiro amargo – Microempreendedor Individual', 1, 68, 23, 4),
 (4900, '538.672.367/8869-42', 'Cultura agre – Empresa Individual de Responsabilidade Limitada', 0, 70, 29, 0),
-(4901, '305.266.577/5695-64', 'Rancho amargo – Microempreendedor Individual', 0, 73, 10, 1),
+(4901, '305.266.577/5695-64', 'Rancho amargo – Microempreendedor Individual', 0, 73, 10, 1);
+INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroEmpregados`, `maquinas`, `nivelAutomacao`) VALUES
 (4902, '078.114.864/9835-17', 'Geração acetoso – Sociedade em Comum', 0, 12, 16, 4),
 (4903, '536.463.493/9522-79', 'Viveiro acetoso – Empresa Individual de Responsabilidade Limitada', 1, 49, 27, 5),
 (4904, '888.850.365/0560-03', 'Rancho agre – Microempreendedor Individual', 0, 32, 24, 5),
@@ -7577,10 +7616,10 @@ INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroE
 (5438, '275.882.324/3677-25', 'Geração azedo – Empresa Individual de Responsabilidade Limitada', 0, 22, 0, 5),
 (5439, '624.141.175/6174-21', 'Geração amargoso – Sociedade em Conta de Participação', 0, 36, 13, 1),
 (5440, '105.324.830/6347-20', 'Cultura amaro – A Microempresa', 0, 43, 16, 2),
-(5441, '388.984.561/2218-36', 'Produção amargo – Empresa Individual de Responsabilidade Limitada', 1, 71, 3, 1);
-INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroEmpregados`, `maquinas`, `nivelAutomacao`) VALUES
+(5441, '388.984.561/2218-36', 'Produção amargo – Empresa Individual de Responsabilidade Limitada', 1, 71, 3, 1),
 (5442, '225.707.720/1467-47', 'Produção azedo – Sociedade em Conta de Participação', 1, 65, 0, 1),
-(5443, '733.700.983/8242-26', 'Rancho azedo – Empresário Individual.', 1, 89, 20, 1),
+(5443, '733.700.983/8242-26', 'Rancho azedo – Empresário Individual.', 1, 89, 20, 1);
+INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroEmpregados`, `maquinas`, `nivelAutomacao`) VALUES
 (5444, '504.395.997/2019-29', 'Cultura avinagrado – Empresário Individual.', 0, 43, 18, 1),
 (5445, '269.738.800/5192-81', 'Geração picante – Empresário Individual.', 0, 77, 6, 3),
 (5446, '434.036.940/8681-76', 'Criação amargoso – Sociedade em Comum', 0, 96, 19, 0),
@@ -7698,9 +7737,7 @@ INSERT INTO `propriedades` (`propriedadeId`, `cpnj`, `nome`, `destino`, `numeroE
 (5558, '336.869.667/1390-45', 'Rancho avinagrado – Microempreended ...', 0, 55, 32, 1),
 (5559, '232.858.813/4120-51', 'Capoeira amargoso – Empresário Individual.', 1, 33, 28, 5),
 (5560, '265.802.300/8345-69', 'Cultura amaro – A Microempresa', 1, 31, 2, 5),
-(5561, '491.894.359/6019-18', 'Cultura amaro – Sociedade Anônima e Sociedade LTDA', 1, 81, 21, 0),
-(5562, '736.020.585/2809-81', 'Produção acetoso – Empresa Individual de Responsabilidade Limitada', 0, 2, 11, 0),
-(5563, '591.715.118/5281-41', 'Criação avinagrado – Sociedade em Conta de Participação', 0, 30, 29, 2);
+(5561, '491.894.359/6019-18', 'Cultura amaro – Sociedade Anônima e Sociedade LTDA', 1, 81, 21, 0);
 
 -- --------------------------------------------------------
 
@@ -7740,12 +7777,18 @@ INSERT INTO `tipo` (`tipoID`, `nome`, `tipo`) VALUES
 --
 
 --
--- Índices de tabela `anexo`
+-- Índices de tabela `agrotoxico`
 --
-ALTER TABLE `anexo`
-  ADD PRIMARY KEY (`anexoId`),
-  ADD KEY `arquivoAnexado` (`arquivo`),
-  ADD KEY `mensagemAnexada` (`mensagem`);
+ALTER TABLE `agrotoxico`
+  ADD PRIMARY KEY (`agrotoxicoID`);
+
+--
+-- Índices de tabela `agrotoxicoPropriedade`
+--
+ALTER TABLE `agrotoxicoPropriedade`
+  ADD PRIMARY KEY (`agrotoxicoPropriedadeID`),
+  ADD KEY `agrotoxico_FK` (`agrotoxico`),
+  ADD KEY `propriedade_FK` (`propriedade`);
 
 --
 -- Índices de tabela `arquivos`
@@ -7767,15 +7810,6 @@ ALTER TABLE `impostos`
   ADD PRIMARY KEY (`impostoID`),
   ADD KEY `tipoImposto_FK` (`tipo`),
   ADD KEY `propriedadeImposto_FK` (`propriedadeId`);
-
---
--- Índices de tabela `messages`
---
-ALTER TABLE `messages`
-  ADD PRIMARY KEY (`Idmessage`) USING BTREE,
-  ADD KEY `msgToCliente` (`MsgTo`),
-  ADD KEY `msgFromCliente` (`MsgFrom`),
-  ADD KEY `Idmessage` (`Idmessage`);
 
 --
 -- Índices de tabela `profilepicture`
@@ -7801,28 +7835,28 @@ ALTER TABLE `tipo`
 --
 
 --
--- AUTO_INCREMENT de tabela `anexo`
+-- AUTO_INCREMENT de tabela `agrotoxico`
 --
-ALTER TABLE `anexo`
-  MODIFY `anexoId` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=349;
+ALTER TABLE `agrotoxico`
+  MODIFY `agrotoxicoID` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
+
+--
+-- AUTO_INCREMENT de tabela `agrotoxicoPropriedade`
+--
+ALTER TABLE `agrotoxicoPropriedade`
+  MODIFY `agrotoxicoPropriedadeID` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de tabela `impostos`
 --
 ALTER TABLE `impostos`
-  MODIFY `impostoID` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT de tabela `messages`
---
-ALTER TABLE `messages`
-  MODIFY `Idmessage` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1232;
+  MODIFY `impostoID` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de tabela `propriedades`
 --
 ALTER TABLE `propriedades`
-  MODIFY `propriedadeId` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5564;
+  MODIFY `propriedadeId` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5565;
 
 --
 -- AUTO_INCREMENT de tabela `tipo`
@@ -7835,11 +7869,11 @@ ALTER TABLE `tipo`
 --
 
 --
--- Restrições para tabelas `anexo`
+-- Restrições para tabelas `agrotoxicoPropriedade`
 --
-ALTER TABLE `anexo`
-  ADD CONSTRAINT `arquivoAnexado` FOREIGN KEY (`arquivo`) REFERENCES `arquivos` (`nomeHash`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `mensagemAnexada` FOREIGN KEY (`mensagem`) REFERENCES `messages` (`Idmessage`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `agrotoxicoPropriedade`
+  ADD CONSTRAINT `agrotoxico_FK` FOREIGN KEY (`agrotoxico`) REFERENCES `agrotoxico` (`agrotoxicoID`),
+  ADD CONSTRAINT `propriedade_FK` FOREIGN KEY (`propriedade`) REFERENCES `propriedades` (`propriedadeId`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Restrições para tabelas `impostos`
@@ -7847,13 +7881,6 @@ ALTER TABLE `anexo`
 ALTER TABLE `impostos`
   ADD CONSTRAINT `propriedadeImposto_FK` FOREIGN KEY (`propriedadeId`) REFERENCES `propriedades` (`propriedadeId`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `tipoImposto_FK` FOREIGN KEY (`tipo`) REFERENCES `tipo` (`tipoID`);
-
---
--- Restrições para tabelas `messages`
---
-ALTER TABLE `messages`
-  ADD CONSTRAINT `msgFromCliente` FOREIGN KEY (`MsgFrom`) REFERENCES `clientes` (`nickName`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `msgToCliente` FOREIGN KEY (`MsgTo`) REFERENCES `clientes` (`nickName`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Restrições para tabelas `profilepicture`
