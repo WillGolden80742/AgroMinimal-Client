@@ -152,16 +152,19 @@ public class Produtos extends javax.swing.JFrame {
     }//GEN-LAST:event_produtosTablePropertyChange
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        int sizeProd = produtos.size() - 1;
-        if (!produtos.get(sizeProd).getNome().equals("")) {
-            modelo.addRow(new Object[]{
-                "",
-                "0.0"
-            });
-            Produto produto = new Produto();
-            produto.setNome("");
-            produto.setProducaoAnual(0.0);
-            produtos.add(produto);
+        int sizeProd = 0;
+        try {
+            if (!produtos.get(sizeProd).getNome().equals("")) {
+                modelo.addRow(new Object[]{
+                    "",
+                    "0.0"
+                });
+                Produto produto = new Produto();
+                produto.setNome("");
+                produto.setProducaoAnual(0.0);
+                produtos.add(produto);
+            }
+        } catch (NullPointerException ex) {
         }
     }//GEN-LAST:event_addButtonActionPerformed
 
