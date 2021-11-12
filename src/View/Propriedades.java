@@ -9,6 +9,7 @@ import Model.bean.Agrotoxico;
 import Model.bean.Authenticated;
 import Model.bean.Imposto;
 import Model.bean.Propriedade;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -33,6 +34,7 @@ public class Propriedades extends javax.swing.JFrame {
     private String CPNJDefault = "   .   .   /    -  ";
     private int actionCrud = 0;
     private TipoSelect tipoSelect = new TipoSelect();
+    private Produtos produtos = new Produtos();
 
     public Propriedades() {
         initComponents();
@@ -117,7 +119,7 @@ public class Propriedades extends javax.swing.JFrame {
         detalhesPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         buscarCidade = new javax.swing.JButton();
-        produtos = new javax.swing.JLabel();
+        produtosLabel = new javax.swing.JLabel();
         prodButton = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         nomePropriedade = new javax.swing.JTextField();
@@ -226,11 +228,16 @@ public class Propriedades extends javax.swing.JFrame {
             }
         });
 
-        produtos.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
-        produtos.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        produtos.setText("Produtos : ");
+        produtosLabel.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
+        produtosLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        produtosLabel.setText("Produtos : ");
 
         prodButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/eye.png"))); // NOI18N
+        prodButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                prodButtonActionPerformed(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
         jLabel3.setText("Local : ");
@@ -271,7 +278,7 @@ public class Propriedades extends javax.swing.JFrame {
                     .addComponent(nomePropriedade))
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(produtos, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(produtosLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(produtos1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(92, 92, 92))
             .addGroup(detalhesPanelLayout.createSequentialGroup()
@@ -316,7 +323,7 @@ public class Propriedades extends javax.swing.JFrame {
                     .addGroup(detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(buscarCidade, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(produtos, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(produtosLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(prodButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addGap(10, 10, 10)
                 .addGroup(detalhesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -922,6 +929,12 @@ public class Propriedades extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_detalhesPanelMousePressed
 
+    private void prodButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prodButtonActionPerformed
+        Point p = new Point(getLocation().x+30,getLocation().y+50);
+        produtos.setLocation(p);
+        produtos.setVisible(true);
+    }//GEN-LAST:event_prodButtonActionPerformed
+
     private void pago() {
         if (actionCrud == 1) {
             editNomeButton.setEnabled(true);
@@ -1088,8 +1101,8 @@ public class Propriedades extends javax.swing.JFrame {
     private javax.swing.JRadioButton pagoRadioButton;
     private javax.swing.JTextField prodAnualLabel;
     private javax.swing.JButton prodButton;
-    private javax.swing.JLabel produtos;
     private javax.swing.JLabel produtos1;
+    private javax.swing.JLabel produtosLabel;
     private javax.swing.JTable propriedadesTable;
     private javax.swing.JToggleButton removeButton;
     private javax.swing.JButton salvar;
