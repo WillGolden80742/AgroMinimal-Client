@@ -4,10 +4,13 @@
  */
 package View;
 
+import ConnectionFactory.Server;
 import Model.bean.Produto;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import util.Communication;
 
 /**
  *
@@ -16,15 +19,30 @@ import javax.swing.table.DefaultTableModel;
 public class Produtos extends javax.swing.JFrame {
 
     private List<Produto> produtos = new ArrayList<>();
+    private int prodID;
     private DefaultTableModel modelo;
+    private Server server = new Server();
+    private boolean edited = false;
 
     public Produtos() {
         initComponents();
-        feedProdutos();
     }
 
-    private void feedProdutos() {
-        List<Produto> prodDAO = produtos;
+    public boolean isEdited() {
+        return edited;
+    }
+
+    public void setEdited(boolean edited) {
+        this.edited = edited;
+    }
+    
+
+    public void readProdutos(int id) {
+        Communication communication = new Communication("PRODUTOS");
+        prodID = id;
+        communication.setParam("propriedadeId", id);
+        communication = server.outPut_inPut(communication);
+        List<Produto> prodDAO = (List<Produto>) communication.getParam("PRODUTOSREPLY");;
         readProdutos(prodDAO, true);
     }
 
@@ -59,9 +77,17 @@ public class Produtos extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         produtosTable = new javax.swing.JTable();
-        jToggleButton1 = new javax.swing.JToggleButton();
+        okButton = new javax.swing.JToggleButton();
         addButton = new javax.swing.JButton();
         removeButton = new javax.swing.JButton();
+
+        addWindowFocusListener(new java.awt.event.WindowFocusListener() {
+            public void windowGainedFocus(java.awt.event.WindowEvent evt) {
+            }
+            public void windowLostFocus(java.awt.event.WindowEvent evt) {
+                formWindowLostFocus(evt);
+            }
+        });
 
         produtosTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -85,7 +111,12 @@ public class Produtos extends javax.swing.JFrame {
             produtosTable.getColumnModel().getColumn(1).setResizable(false);
         }
 
-        jToggleButton1.setText("OK");
+        okButton.setText("OK");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
 
         addButton.setText("Adicionar");
         addButton.addActionListener(new java.awt.event.ActionListener() {
@@ -106,7 +137,7 @@ public class Produtos extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
-            .addComponent(jToggleButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(okButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(addButton)
@@ -124,7 +155,7 @@ public class Produtos extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jToggleButton1)
+                .addComponent(okButton)
                 .addGap(0, 0, 0))
         );
 
@@ -152,9 +183,8 @@ public class Produtos extends javax.swing.JFrame {
     }//GEN-LAST:event_produtosTablePropertyChange
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        int sizeProd = 0;
         try {
-            if (!produtos.get(sizeProd).getNome().equals("")) {
+            if (!produtosTable.getValueAt(produtosTable.getRowCount() - 1, 0).equals("") && (Double.parseDouble((String) produtosTable.getValueAt(produtosTable.getRowCount() - 1, 1))) > 0.0) {
                 modelo.addRow(new Object[]{
                     "",
                     "0.0"
@@ -164,25 +194,43 @@ public class Produtos extends javax.swing.JFrame {
                 produto.setProducaoAnual(0.0);
                 produtos.add(produto);
             }
-        } catch (NullPointerException ex) {
+        } catch (NullPointerException | ArrayIndexOutOfBoundsException ex) {
         }
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
-        if (produtosTable.getRowCount() > 1) {
-            produtos.remove(produtosTable.getSelectedRow());
-            readProdutos(produtos, false);
-        } else if (produtosTable.getRowCount() == 1) {
-            List<Produto> p = new ArrayList<>();
-            readProdutos(p, true);
+        try {
+            if (produtosTable.getRowCount() > 1) {
+                produtos.remove(produtosTable.getSelectedRow());
+                readProdutos(produtos, false);
+            } else if (produtosTable.getRowCount() == 1) {
+                List<Produto> p = new ArrayList<>();
+                readProdutos(p, true);
+            }
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            JOptionPane.showMessageDialog(this, "Selecione produto!");
         }
     }//GEN-LAST:event_removeButtonActionPerformed
+
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+        Communication communication = new Communication("PRODUTOSUPDATE");
+        communication.setParam("produtos", produtos);
+        communication.setParam("propriedadeId", prodID);
+        communication = server.outPut_inPut(communication);
+        JOptionPane.showMessageDialog(null, communication.getParam("PRODUTOSUPDATEREPLY"));
+        setEdited(true);
+        setVisible(false);
+    }//GEN-LAST:event_okButtonActionPerformed
+
+    private void formWindowLostFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowLostFocus
+        setVisible(false);
+    }//GEN-LAST:event_formWindowLostFocus
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JToggleButton jToggleButton1;
+    private javax.swing.JToggleButton okButton;
     private javax.swing.JTable produtosTable;
     private javax.swing.JButton removeButton;
     // End of variables declaration//GEN-END:variables

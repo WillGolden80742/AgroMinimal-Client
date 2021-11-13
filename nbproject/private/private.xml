@@ -5,6 +5,10 @@
         <group>
             <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/Chat.java</file>
             <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/Propriedades.java</file>
+            <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/TipoSelect.java</file>
+            <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/Model/bean/Tipo.java</file>
+            <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/Produtos.java</file>
+            <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/SingUP.java</file>
             <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/Model/bean/Imposto.java</file>
             <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/TreatAuthentication.java</file>
             <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/Model/bean/Agrotoxico.java</file>
@@ -12,9 +16,6 @@
             <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/Model/bean/Propriedade.java</file>
             <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/EditProfile.java</file>
             <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/Model/bean/Produto.java</file>
-            <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/TipoSelect.java</file>
-            <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/Model/bean/Tipo.java</file>
-            <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/Produtos.java</file>
         </group>
     </open-files>
 </project-private>
