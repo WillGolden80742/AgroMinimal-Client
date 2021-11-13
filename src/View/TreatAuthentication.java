@@ -86,7 +86,7 @@ public class TreatAuthentication implements Runnable {
                             reply.setParam("BIOMETRICREPLY", welcome);
                             Authenticated auth = new Authenticated();
                             auth.setLogin((String) reply.getParam("NICKNAME"));
-                            new Chat().setVisible(true);
+                            new Propriedades().setVisible(true);
                             login.setVisible(false);
                             this.auth = true;
                         } else {
