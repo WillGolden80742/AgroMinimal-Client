@@ -8,7 +8,6 @@ package Threads;
 import ConnectionFactory.Server;
 import Model.bean.ProfilePic;
 import Model.bean.TreatFiles;
-import View.Chat;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -69,7 +68,7 @@ public class SaveProfileImage implements Runnable {
 
             }
         } catch (IOException ex) {
-            Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SaveProfileImage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

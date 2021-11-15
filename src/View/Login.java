@@ -24,7 +24,7 @@ public class Login extends javax.swing.JFrame {
         setIconTop();
         setLocation(500, 250);
         setLaf();
-        setTitle("TwoLeaf");
+        setTitle("AgroMinimal");
     }
 
     public void setMessageLogin (String t) {
@@ -107,7 +107,7 @@ public class Login extends javax.swing.JFrame {
         jLabel1.setToolTipText("nickname");
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/chat.png"))); // NOI18N
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/agro.png"))); // NOI18N
 
         messageLogin.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         messageLogin.setForeground(new java.awt.Color(255, 51, 0));
@@ -141,9 +141,6 @@ public class Login extends javax.swing.JFrame {
         biometricLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/biometric.png"))); // NOI18N
         biometricLabel.setLabelFor(this);
         biometricLabel.setToolTipText("Biometria");
-        biometricLabel.setMaximumSize(new java.awt.Dimension(32, 32));
-        biometricLabel.setMinimumSize(new java.awt.Dimension(32, 32));
-        biometricLabel.setPreferredSize(new java.awt.Dimension(32, 32));
         biometricLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 biometricLabelMouseClicked(evt);
@@ -242,7 +239,7 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_themeLabelMouseClicked
 
     private void biometricLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_biometricLabelMouseClicked
-        codePanel = new CodePanel(getLocation());
+        codePanel = new CodePanel(getLocation(),true);
         codePanel.setVisible(true);
     }//GEN-LAST:event_biometricLabelMouseClicked
 
@@ -259,11 +256,12 @@ public class Login extends javax.swing.JFrame {
         hashPassword = new Encrypt(nickName.getText() + password.getText()).getHashMd5();
         message.setParam("nickName", nickName.getText());
         message.setParam("password", hashPassword);
-        replyLogin = (String) server.outPut_inPut(message).getParam("LOGINREPLY");
+        message = server.outPut_inPut(message);
+        replyLogin = (String) message.getParam("LOGINREPLY");
         if (replyLogin.equals("OK")) {
             Authenticated auth = new Authenticated();
             auth.setLogin(nickName.getText());
-            new Propriedades().setVisible(true);
+            new Propriedades(Integer.parseInt((String) message.getParam("LEVEL"))).setVisible(true);
             setVisible(false);
         } else {
             messageLogin.setText(replyLogin);

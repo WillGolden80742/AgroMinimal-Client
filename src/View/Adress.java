@@ -7,8 +7,6 @@ package View;
 
 import ConnectionFactory.Server;
 import Model.bean.Endereco;
-import Model.bean.Propriedade;
-import com.formdev.flatlaf.FlatDarkLaf;
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.io.File;
@@ -161,6 +159,7 @@ public class Adress extends javax.swing.JFrame implements ChangeListener {
                 formWindowGainedFocus(evt);
             }
             public void windowLostFocus(java.awt.event.WindowEvent evt) {
+                formWindowLostFocus(evt);
             }
         });
 
@@ -314,6 +313,10 @@ public class Adress extends javax.swing.JFrame implements ChangeListener {
     private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
 
     }//GEN-LAST:event_formWindowGainedFocus
+
+    private void formWindowLostFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowLostFocus
+       setVisible(false);
+    }//GEN-LAST:event_formWindowLostFocus
 
     private String endercoTratado() {
         String[] endereçoArray = logradouro.getText().split(" ");

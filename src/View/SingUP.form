@@ -46,7 +46,7 @@
                   <Component id="logar" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
                   <Component id="name" alignment="0" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace pref="88" max="32767" attributes="0"/>
+              <EmptySpace pref="99" max="32767" attributes="0"/>
           </Group>
           <Component id="messageLogin" alignment="1" max="32767" attributes="0"/>
       </Group>

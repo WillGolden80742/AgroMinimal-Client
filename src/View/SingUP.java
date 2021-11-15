@@ -196,7 +196,7 @@ public class SingUP extends javax.swing.JFrame {
                     .addComponent(nickName)
                     .addComponent(logar, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(name))
-                .addContainerGap(88, Short.MAX_VALUE))
+                .addContainerGap(99, Short.MAX_VALUE))
             .addComponent(messageLogin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
@@ -288,7 +288,7 @@ public class SingUP extends javax.swing.JFrame {
     }//GEN-LAST:event_nameKeyReleased
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        new Login().setVisible(true);
+        new BiometricServer().getLogin().setVisible(true);
         dispose();
     }//GEN-LAST:event_formWindowClosing
 

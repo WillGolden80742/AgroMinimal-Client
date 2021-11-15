@@ -6,6 +6,7 @@
 package Threads;
 
 import ConnectionFactory.Server;
+import Model.bean.Device;
 import Model.bean.Encrypt;
 import javax.swing.JOptionPane;
 import util.Communication;
@@ -23,13 +24,15 @@ public class EditAccount implements Runnable {
     private final String name;
     private final String nickName;
     private final String password;
+    private final String device;
 
-    public EditAccount(byte[] picture, String format, String name, String nickName, String password) {
+    public EditAccount(byte[] picture, String format, String name, String nickName, String password, String device) {
         this.picture = picture;
         this.format = format;
         this.name = name;
         this.nickName = nickName;
         this.password = password;
+        this.device = device;
     }
 
 
@@ -42,6 +45,7 @@ public class EditAccount implements Runnable {
         Communication message = new Communication("EDITACCOUNT");
         try {
             message.setParam("nickName", nickName);
+            message.setParam("deviceID", Device.getDeviceID());
             message.setParam("picture", picture);
             message.setParam("format", format);
         } catch (NullPointerException ex) {

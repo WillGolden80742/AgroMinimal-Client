@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package View;
 
 import ConnectionFactory.Server;
@@ -41,6 +36,14 @@ public class BiometricServer {
         return portAdress;
     }
 
+    public static Login getLogin() {
+        return login;
+    }
+
+    public static void setLogin(Login login) {
+        BiometricServer.login = login;
+    }
+
     public static void setMainServer() {
         File myObj = new File("server.ini");
         Scanner myReader;
@@ -64,7 +67,7 @@ public class BiometricServer {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
-        new Server(host,port);
+        new Server(host, port);
     }
 
     public static String getHostAdress() {
@@ -99,7 +102,7 @@ public class BiometricServer {
     public static void main(String[] args) {
         setMainServer();
         login = new Login();
-        new Propriedades().setVisible(true);
+        login.setVisible(true);
         try {
             UIManager.setLookAndFeel(new FlatDarkLaf());
         } catch (UnsupportedLookAndFeelException ex) {
@@ -112,7 +115,7 @@ public class BiometricServer {
             while (true) {
                 Socket socket = server.waitConnection();
                 System.out.println("Cliente conectado!");
-                TreatAuthentication treatConnection = new TreatAuthentication(socket, login);
+                TreatAuthentication treatConnection = new TreatAuthentication(socket);
                 Thread t = new Thread(treatConnection);
                 t.start();
                 System.out.println("Cliente finalizado\n");

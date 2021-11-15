@@ -5,7 +5,6 @@
  */
 package Model.bean;
 
-import View.Chat;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -126,7 +125,7 @@ public class TreatFiles extends Arquivos {
         try {
             Files.write(path, file);
         } catch (IOException ex) {
-            Logger.getLogger(Chat.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TreatFiles.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

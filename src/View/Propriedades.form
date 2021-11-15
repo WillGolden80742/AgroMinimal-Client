@@ -181,17 +181,18 @@
       </SubComponents>
     </Container>
     <Container class="javax.swing.JTabbedPane" name="nivel">
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="nivelMouseClicked"/>
+        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="nivelKeyReleased"/>
+      </Events>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
       <SubComponents>
         <Container class="javax.swing.JPanel" name="detalhesPanel">
-          <Events>
-            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="detalhesPanelMousePressed"/>
-          </Events>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="N&#xed;vel 1">
-                <Property name="tabTitle" type="java.lang.String" value="N&#xed;vel 1"/>
+              <JTabbedPaneConstraints tabName="Propriedades">
+                <Property name="tabTitle" type="java.lang.String" value="Propriedades"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -425,8 +426,8 @@
         <Container class="javax.swing.JPanel" name="impostoPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="N&#xed;vel 2">
-                <Property name="tabTitle" type="java.lang.String" value="N&#xed;vel 2"/>
+              <JTabbedPaneConstraints tabName="Impostos">
+                <Property name="tabTitle" type="java.lang.String" value="Impostos"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -550,8 +551,8 @@
         <Container class="javax.swing.JPanel" name="agrotoxicosPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="N&#xed;vel 3">
-                <Property name="tabTitle" type="java.lang.String" value="N&#xed;vel 3"/>
+              <JTabbedPaneConstraints tabName="Agrotoxicos">
+                <Property name="tabTitle" type="java.lang.String" value="Agrotoxicos"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -750,6 +751,7 @@
           <Image iconType="3" name="/Images/edite.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value=" EDITAR"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="editarActionPerformed"/>

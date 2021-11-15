@@ -40,12 +40,14 @@ public class TipoSelect extends javax.swing.JFrame {
         DefaultTableModel modelo = (DefaultTableModel) tipoTable.getModel();
         modelo.setNumRows(0);
         tipDAO = (ArrayList) communication.getParam("TIPOREADREPLY");
+        try {    
         for (Tipo i : tipDAO) {
             modelo.addRow(new Object[]{
                 i.getNome(),
                 i.getTipo()
             });
         }
+        } catch (NullPointerException ex) {}
     }
 
     /**

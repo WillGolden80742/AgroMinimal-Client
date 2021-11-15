@@ -35,9 +35,12 @@ public class Propriedades extends javax.swing.JFrame {
     private int actionCrud = 0;
     private TipoSelect tipoSelect = new TipoSelect();
     private Produtos produtos = new Produtos();
+    private int currentLevel;
 
-    public Propriedades() {
+    public Propriedades(int level) {
         initComponents();
+        nivel.setSelectedIndex(level);
+        currentLevel = level;
         setLocation(400, 100);
         new Thread(readTables).start();
         toggleFields(false);
@@ -47,10 +50,14 @@ public class Propriedades extends javax.swing.JFrame {
         @Override
         public void run() {
             Communication communication = new Communication("AGROLIST");
+            communication.setParam("nickName", new Authenticated().getLogin());
             communication = server.outPut_inPut(communication);
             List<Agrotoxico> impDAO = (ArrayList) communication.getParam("AGROLISTREPLY");
-            for (Agrotoxico i : impDAO) {
-                agroComboBox.addItem(i.getNome() + " Ingrediente : " + i.getIngrediente());
+            try {
+                for (Agrotoxico i : impDAO) {
+                    agroComboBox.addItem(i.getNome() + " Ingrediente : " + i.getIngrediente());
+                }
+            } catch (NullPointerException ex) {
             }
             agrotoxicosTotais = impDAO;
         }
@@ -93,6 +100,7 @@ public class Propriedades extends javax.swing.JFrame {
             toggleFields(false);
             new Thread(readAgroList).start();
         }
+
     };
 
     private void readPropriedades(Communication communication, DefaultTableModel modelo) {
@@ -208,9 +216,14 @@ public class Propriedades extends javax.swing.JFrame {
             propriedadesTable.getColumnModel().getColumn(1).setResizable(false);
         }
 
-        detalhesPanel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                detalhesPanelMousePressed(evt);
+        nivel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                nivelMouseClicked(evt);
+            }
+        });
+        nivel.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                nivelKeyReleased(evt);
             }
         });
 
@@ -347,7 +360,7 @@ public class Propriedades extends javax.swing.JFrame {
 
         detalhesPanelLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel5, jLabel6, jLabel7, jLabel8, maquinasSpinner});
 
-        nivel.addTab("Nível 1", detalhesPanel);
+        nivel.addTab("Propriedades", detalhesPanel);
 
         impostoTotalLabel.setText("Total : ");
 
@@ -429,7 +442,7 @@ public class Propriedades extends javax.swing.JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        nivel.addTab("Nível 2", impostoPanel);
+        nivel.addTab("Impostos", impostoPanel);
 
         removeButton.setText("Remover");
         removeButton.addActionListener(new java.awt.event.ActionListener() {
@@ -498,7 +511,7 @@ public class Propriedades extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        nivel.addTab("Nível 3", agrotoxicosPanel);
+        nivel.addTab("Agrotoxicos", agrotoxicosPanel);
 
         apagar.setFont(new java.awt.Font("Liberation Sans", 1, 15)); // NOI18N
         apagar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/delete.png"))); // NOI18N
@@ -548,6 +561,7 @@ public class Propriedades extends javax.swing.JFrame {
         editar.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         editar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/edite.png"))); // NOI18N
         editar.setText(" EDITAR");
+        editar.setEnabled(false);
         editar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editarActionPerformed(evt);
@@ -684,6 +698,7 @@ public class Propriedades extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, communication.getParam("PROPRIEDADEDELETEREPLY"));
         clear();
         new Thread(readTables).start();
+        editar.setEnabled(false);
     }
 
     private void clear() {
@@ -716,6 +731,7 @@ public class Propriedades extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, communication.getParam("PROPRIEDADECREATEREPLY"));
         toggleFields(false);
         apagar.setEnabled(true);
+        editar.setEnabled(false);
         new Thread(readTables).start();
     }
 
@@ -746,6 +762,7 @@ public class Propriedades extends javax.swing.JFrame {
 
     private String updateAgrotoxico(Propriedade p) {
         Communication communication = new Communication("AGROUPDATE");
+        communication.setParam("nickName", new Authenticated().getLogin());
         communication.setParam("propriedadeId", p.getPropriedadeId());
         communication.setParam("agrotoxicos", agrotoxicos);
         communication = server.outPut_inPut(communication);
@@ -755,6 +772,7 @@ public class Propriedades extends javax.swing.JFrame {
     private String updateImposto(Propriedade p) {
         List<Imposto> impostoEdit = impostos;
         Communication communication = new Communication("IMPOSTOUPDATE");
+        communication.setParam("nickName", new Authenticated().getLogin());
         try {
             if (impostoTable.getValueAt(impostoTable.getRowCount() - 1, 3).equals(null));
         } catch (NullPointerException ex) {
@@ -801,6 +819,7 @@ public class Propriedades extends javax.swing.JFrame {
         actionCrud = 2;
         clear();
         toggleFields(true);
+        prodButton.setEnabled(false);
         buscarCidade.setEnabled(false);
         apagar.setEnabled(false);
     }//GEN-LAST:event_novoActionPerformed
@@ -821,6 +840,7 @@ public class Propriedades extends javax.swing.JFrame {
     private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
         if (cnpj.cnpjChek == false && actionCrud != 1) {
             toggleFields(false);
+            editar.setEnabled(false);
         } else if (actionCrud == 2) {
             currentPropriedade.setCpnj(cnpj.cnpj);
         }
@@ -941,10 +961,6 @@ public class Propriedades extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_removeButtonActionPerformed
 
-    private void detalhesPanelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_detalhesPanelMousePressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_detalhesPanelMousePressed
-
     private void prodButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prodButtonActionPerformed
         Point p = new Point(getLocation().x + 30, getLocation().y + 50);
         produtos.setLocation(p);
@@ -954,8 +970,31 @@ public class Propriedades extends javax.swing.JFrame {
 
     private void logoutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutMenuItemActionPerformed
         setVisible(false);
-        new Login().setVisible(true);
+        TreatAuthentication.setAuth(false);
+        BiometricServer.getLogin().setVisible(true);
     }//GEN-LAST:event_logoutMenuItemActionPerformed
+
+    private void nivelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nivelMouseClicked
+        verifyLevel();
+    }//GEN-LAST:event_nivelMouseClicked
+
+    private void nivelKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nivelKeyReleased
+        verifyLevel();
+    }//GEN-LAST:event_nivelKeyReleased
+
+    private void verifyLevel() {
+        int level = nivel.getSelectedIndex();
+        if (level != currentLevel && level != 0) {
+            switch (level) {
+                case 1:
+                    JOptionPane.showMessageDialog(null, "Acesso restrito aos diretores de divisões");
+                    break;
+                case 2:
+                    JOptionPane.showMessageDialog(null, "Acesso restrito pelo ministro do meio ambiente");
+            }
+            nivel.setSelectedIndex(0);
+        }
+    }
 
     private void pago() {
         if (actionCrud == 1) {
@@ -989,9 +1028,11 @@ public class Propriedades extends javax.swing.JFrame {
         actionCrud = 0;
         agroComboBox.setSelectedIndex(0);
         editNomeButton.setEnabled(false);
+        editar.setEnabled(true);
         try {
             toggleFields(false);
             Communication communication = new Communication("PROPRIEDADESELECTED");
+            communication.setParam("nickName", new Authenticated().getLogin());
             communication.setParam("propriedadeId", propriedades.get(propriedadesTable.getSelectedRow()).getPropriedadeId());
             apagar.setEnabled(true);
             communication = server.outPut_inPut(communication);
@@ -1028,53 +1069,60 @@ public class Propriedades extends javax.swing.JFrame {
     }
 
     private void readImpostos(Communication communication) {
-        DefaultTableModel modelo = (DefaultTableModel) impostoTable.getModel();
-        modelo.setNumRows(0);
-        List<Imposto> impDAO = (ArrayList) communication.getParam("IMPOSTOSREPLY");
-        int count = 0;
-        for (Imposto i : impDAO) {
-            modelo.addRow(new Object[]{
-                i.getValorBruto(),
-                i.getValorLiquido(),
-                i.getSubsidio(),
-                i.getTipo().getNome(),
-                i.getTipo().getTipo()
-            });
-            count++;
+        try {
+            DefaultTableModel modelo = (DefaultTableModel) impostoTable.getModel();
+            modelo.setNumRows(0);
+            List<Imposto> impDAO = (ArrayList) communication.getParam("IMPOSTOSREPLY");
+            int count = 0;
+            for (Imposto i : impDAO) {
+                modelo.addRow(new Object[]{
+                    i.getValorBruto(),
+                    i.getValorLiquido(),
+                    i.getSubsidio(),
+                    i.getTipo().getNome(),
+                    i.getTipo().getTipo()
+                });
+                count++;
+            }
+            if (count == 0) {
+                modelo.setNumRows(1);
+            } else {
+                modelo.setNumRows(modelo.getRowCount() + 1);
+            }
+            impostoTotalLabel.setText("Total : R$ " + (double) communication.getParam("IMPOSTOSTOTALREPLY"));
+            Imposto i = new Imposto();
+            i.setValorBruto(0.0);
+            i.setSubsidio(0.0);
+            impostos = impDAO;
+            impostos.add(i);
+        } catch (NullPointerException ex) {
         }
-        if (count == 0) {
-            modelo.setNumRows(1);
-        } else {
-            modelo.setNumRows(modelo.getRowCount() + 1);
-        }
-        impostoTotalLabel.setText("Total : R$ " + (double) communication.getParam("IMPOSTOSTOTALREPLY"));
-        Imposto i = new Imposto();
-        i.setValorBruto(0.0);
-        i.setSubsidio(0.0);
-        impostos = impDAO;
-        impostos.add(i);
+
     }
 
     private void readAgrotoxicos(Communication communication) {
-        agroModelo = (DefaultTableModel) agroTable.getModel();
-        agroModelo.setNumRows(0);
-        List<Agrotoxico> impDAO = (ArrayList) communication.getParam("AGROREADREPLY");
-        String message = "";
-        int count = 0;
-        for (Agrotoxico i : impDAO) {
-            if (i.getAprovado() == 0) {
-                message = "\"" + i.getNome() + "\",\n";
-                count++;
+        try {
+            agroModelo = (DefaultTableModel) agroTable.getModel();
+            agroModelo.setNumRows(0);
+            List<Agrotoxico> impDAO = (ArrayList) communication.getParam("AGROREADREPLY");
+            String message = "";
+            int count = 0;
+            for (Agrotoxico i : impDAO) {
+                if (i.getAprovado() == 0) {
+                    message = "\"" + i.getNome() + "\",\n";
+                    count++;
+                }
+                agroModelo.addRow(new Object[]{
+                    i.getNome(),
+                    i.getIngrediente(),});
             }
-            agroModelo.addRow(new Object[]{
-                i.getNome(),
-                i.getIngrediente(),});
-        }
 
-        if (count > 0 && nivel.getSelectedIndex() == 2) {
-            JOptionPane.showMessageDialog(null, message + " são agrotoxicos proibidos!");
+            if (count > 0 && nivel.getSelectedIndex() == 2) {
+                JOptionPane.showMessageDialog(null, message + " são agrotoxicos proibidos!");
+            }
+            agrotoxicos = impDAO;
+        } catch (NullPointerException ex) {
         }
-        agrotoxicos = impDAO;
     }
 
     /**

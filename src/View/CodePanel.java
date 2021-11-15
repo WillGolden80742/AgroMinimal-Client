@@ -10,20 +10,26 @@ import java.util.Random;
 public class CodePanel extends javax.swing.JFrame {
 
     public static String codeAuth = "";
-            
-    public CodePanel(Point l) {
+    public static boolean cad;
+
+    public CodePanel(Point l, boolean c) {
+        this.cad = c;
         initComponents();
         setLocation(l);
-        setLocation(getLocation().x-25,getLocation().y+75);
+        setLocation(getLocation().x - 25, getLocation().y + 75);
         randNumber();
         port.setText("PORT : " + BiometricServer.getPortAdress());
         ip.setText("IP : " + BiometricServer.getHostAdress());
     }
 
+    public static boolean isCad() {
+        return cad;
+    }
+
     public CodePanel() {
 
     }
-    
+
     private void randNumber() {
         Random random = new Random();
         code.setText(String.valueOf(String.format("%04d", random.nextInt(9999))));
@@ -90,7 +96,7 @@ public class CodePanel extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowLostFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowLostFocus
-       setVisible(false);
+        setVisible(false);
     }//GEN-LAST:event_formWindowLostFocus
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
