@@ -7,7 +7,7 @@ package View;
 
 import ConnectionFactory.Server;
 import LookAndFeel.LAF;
-import Model.bean.Contact;
+import Model.bean.Cliente;
 import Model.bean.Device;
 import Model.bean.ProfilePic;
 import Model.bean.TreatFiles;
@@ -432,9 +432,9 @@ public class EditProfile extends javax.swing.JFrame {
         server = new Server();
         Communication message = new Communication("SEARCHCONTACT");
         message.setParam("nickName", nickName);
-        Contact c;
+        Cliente c;
         try {
-            c = (Contact) server.outPut_inPut(message).getParam("SEARCHCONTACTREPLY");
+            c = (Cliente) server.outPut_inPut(message).getParam("SEARCHCONTACTREPLY");
             name.setEnabled(false);
             name.setText(c.getNome());
             new Device().setDeviceID(c.getDevice().getDeviceID());
