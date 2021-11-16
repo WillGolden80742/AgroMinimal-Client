@@ -5,6 +5,7 @@
 package View;
 
 import ConnectionFactory.Server;
+import Model.bean.Authenticated;
 import Model.bean.Tipo;
 import java.util.ArrayList;
 import java.util.List;

@@ -36,6 +36,8 @@ public class Propriedades extends javax.swing.JFrame {
     private TipoSelect tipoSelect = new TipoSelect();
     private Produtos produtos = new Produtos();
     private int currentLevel;
+    private Authenticated authenticated = new Authenticated();
+    private EditProfile editProfile = new EditProfile(authenticated.getLogin(), this);
 
     public Propriedades(int level) {
         initComponents();
@@ -762,7 +764,6 @@ public class Propriedades extends javax.swing.JFrame {
 
     private String updateAgrotoxico(Propriedade p) {
         Communication communication = new Communication("AGROUPDATE");
-        communication.setParam("nickName", new Authenticated().getLogin());
         communication.setParam("propriedadeId", p.getPropriedadeId());
         communication.setParam("agrotoxicos", agrotoxicos);
         communication = server.outPut_inPut(communication);
@@ -772,7 +773,6 @@ public class Propriedades extends javax.swing.JFrame {
     private String updateImposto(Propriedade p) {
         List<Imposto> impostoEdit = impostos;
         Communication communication = new Communication("IMPOSTOUPDATE");
-        communication.setParam("nickName", new Authenticated().getLogin());
         try {
             if (impostoTable.getValueAt(impostoTable.getRowCount() - 1, 3).equals(null));
         } catch (NullPointerException ex) {
@@ -842,6 +842,7 @@ public class Propriedades extends javax.swing.JFrame {
             toggleFields(false);
             editar.setEnabled(false);
         } else if (actionCrud == 2) {
+            cnpj.cnpjChek = false;
             currentPropriedade.setCpnj(cnpj.cnpj);
         }
         try {
@@ -861,6 +862,13 @@ public class Propriedades extends javax.swing.JFrame {
         if (produtos.isEdited() == true) {
             produtos.setEdited(false);
             proprietarioSelected();
+        }
+        try {
+            if (currentPropriedade.getPropriedadeId() > 0 && actionCrud != 2) {
+                editar.setEnabled(true);
+                apagar.setEnabled(true);
+            }
+        } catch (NullPointerException ex) {
         }
     }//GEN-LAST:event_formWindowGainedFocus
 
@@ -914,8 +922,6 @@ public class Propriedades extends javax.swing.JFrame {
     }//GEN-LAST:event_editNomeButtonActionPerformed
 
     private void editMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editMenuItemActionPerformed
-        Authenticated authenticated = new Authenticated();
-        EditProfile editProfile = new EditProfile(authenticated.getLogin(), this);
         editProfile.setLocation(getLocation());
         editProfile.setVisible(true);
     }//GEN-LAST:event_editMenuItemActionPerformed
@@ -971,6 +977,7 @@ public class Propriedades extends javax.swing.JFrame {
     private void logoutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutMenuItemActionPerformed
         setVisible(false);
         TreatAuthentication.setAuth(false);
+        editProfile.setVisible(false);
         BiometricServer.getLogin().setVisible(true);
     }//GEN-LAST:event_logoutMenuItemActionPerformed
 
@@ -1032,7 +1039,6 @@ public class Propriedades extends javax.swing.JFrame {
         try {
             toggleFields(false);
             Communication communication = new Communication("PROPRIEDADESELECTED");
-            communication.setParam("nickName", new Authenticated().getLogin());
             communication.setParam("propriedadeId", propriedades.get(propriedadesTable.getSelectedRow()).getPropriedadeId());
             apagar.setEnabled(true);
             communication = server.outPut_inPut(communication);
