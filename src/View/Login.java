@@ -3,7 +3,7 @@ package View;
 import ConnectionFactory.Server;
 import LookAndFeel.LAF;
 import Model.bean.Authenticated;
-import Model.bean.Encrypt;
+import Model.bean.Cripto;
 import java.awt.Color;
 import java.awt.Toolkit;
 import javax.swing.ImageIcon;
@@ -253,7 +253,7 @@ public class Login extends javax.swing.JFrame {
         String replyLogin;
         String hashPassword;
         Communication message = new Communication("LOGIN");
-        hashPassword = new Encrypt(nickName.getText() + password.getText()).getHashMd5();
+        hashPassword = new Cripto(nickName.getText() + password.getText()).getHashMd5();
         message.setParam("nickName", nickName.getText());
         message.setParam("password", hashPassword);
         message = server.outPut_inPut(message);

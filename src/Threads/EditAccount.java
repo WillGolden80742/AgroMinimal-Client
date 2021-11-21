@@ -7,7 +7,7 @@ package Threads;
 
 import ConnectionFactory.Server;
 import Model.bean.Device;
-import Model.bean.Encrypt;
+import Model.bean.Cripto;
 import javax.swing.JOptionPane;
 import util.Communication;
 
@@ -41,7 +41,7 @@ public class EditAccount implements Runnable {
     public void run() {
         String hashPassword;
         server = new Server();
-        hashPassword = new Encrypt(nickName + password).getHashMd5();
+        hashPassword = new Cripto(nickName + password).getHashMd5();
         Communication message = new Communication("EDITACCOUNT");
         try {
             message.setParam("nickName", nickName);

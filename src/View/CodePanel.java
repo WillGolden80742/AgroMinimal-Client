@@ -1,5 +1,6 @@
 package View;
 
+import ConnectionFactory.Server;
 import java.awt.Point;
 import java.util.Random;
 
@@ -19,7 +20,7 @@ public class CodePanel extends javax.swing.JFrame {
         setLocation(getLocation().x - 25, getLocation().y + 75);
         randNumber();
         port.setText("PORT : " + BiometricServer.getPortAdress());
-        ip.setText("IP : " + BiometricServer.getHostAdress());
+        ip.setText("IP : " + Server.getHostAdress());
     }
 
     public static boolean isCad() {

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package util;
 
 import Model.bean.Authenticated;
@@ -35,7 +30,7 @@ public class Communication implements Serializable {
     }
 
     public Object getParam(String chave) {
-        return params.get(chave);
+        return  params.get(chave);
     }
 
     public void setNickName(String nickName) {
@@ -43,7 +38,7 @@ public class Communication implements Serializable {
     }
 
     public String getNickName() {
-       return nickName;
+        return nickName;
     }
-    
+
 }

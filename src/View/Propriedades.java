@@ -4,9 +4,11 @@
  */
 package View;
 
+import ConnectionFactory.TreatAuthentication;
 import ConnectionFactory.Server;
 import Model.bean.Agrotoxico;
 import Model.bean.Authenticated;
+import Model.bean.Cripto;
 import Model.bean.Imposto;
 import Model.bean.Propriedade;
 import java.awt.Point;
@@ -46,6 +48,15 @@ public class Propriedades extends javax.swing.JFrame {
         setLocation(400, 100);
         new Thread(readTables).start();
         toggleFields(false);
+        cripto();
+    }
+
+    public void cripto() {
+        String texto = "Meu nome não é john", textoC;
+        System.out.println("Texto " + texto);
+        textoC = new Cripto().cifrarV(texto);
+        System.out.println("Cripotografado " +textoC);
+        System.out.println("Decripotografado " +new Cripto().decifrarV(textoC));
     }
 
     private final Runnable readAgroList = new Runnable() {

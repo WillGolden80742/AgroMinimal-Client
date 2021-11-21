@@ -6,7 +6,7 @@
 package Threads;
 
 import ConnectionFactory.Server;
-import Model.bean.Encrypt;
+import Model.bean.Cripto;
 import View.Login;
 import static java.awt.Color.GREEN;
 import util.Communication;
@@ -38,7 +38,7 @@ public class CreateNewAccount implements Runnable {
         String hashPassword;
         server = new Server();
         Communication message = new Communication("CREATEACCOUNT");
-        hashPassword = new Encrypt(nickName + password).getHashMd5();
+        hashPassword = new Cripto(nickName + password).getHashMd5();
         try {
             message.setParam("picture", picture);
             message.setParam("format", format);

@@ -3,11 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package View;
+package ConnectionFactory;
 
 import ConnectionFactory.Server;
 import Model.bean.Authenticated;
 import Model.bean.Device;
+import View.BiometricServer;
+import View.CodePanel;
+import View.Propriedades;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

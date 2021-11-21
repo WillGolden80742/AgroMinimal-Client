@@ -11,6 +11,7 @@ import java.io.Serializable;
  * @author will
  */
 public class Endereco implements Serializable {
+
     private String endereco;
     private String referencia;
     private String complemento;

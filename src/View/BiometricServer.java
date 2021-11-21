@@ -1,5 +1,6 @@
 package View;
 
+import ConnectionFactory.TreatAuthentication;
 import ConnectionFactory.Server;
 import com.formdev.flatlaf.FlatDarkLaf;
 import java.io.File;
@@ -44,55 +45,6 @@ public class BiometricServer {
         BiometricServer.login = login;
     }
 
-    public static void setMainServer() {
-        File myObj = new File("server.ini");
-        Scanner myReader;
-        String host = "";
-        int port = 0;
-        try {
-            myReader = new Scanner(myObj);
-            int cont = 0;
-            while (myReader.hasNextLine()) {
-
-                String data = myReader.nextLine();
-                if (cont == 0) {
-                    data = data.replaceAll(" ", "").split(":")[1];
-                    host = data;
-                } else if (cont == 1) {
-                    data = data.replaceAll(" ", "").split(":")[1];
-                    port = Integer.parseInt(data);
-                }
-                cont++;
-            }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        new Server(host, port);
-    }
-
-    public static String getHostAdress() {
-        String ip = "000.000.0.000";
-        try {
-            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-            while (interfaces.hasMoreElements()) {
-                NetworkInterface iface = interfaces.nextElement();
-                // filters out 127.0.0.1 and inactive interfaces
-                if (iface.isLoopback() || !iface.isUp()) {
-                    continue;
-                }
-
-                Enumeration<InetAddress> addresses = iface.getInetAddresses();
-                while (addresses.hasMoreElements()) {
-                    InetAddress addr = addresses.nextElement();
-                    ip = addr.getHostAddress();
-                }
-            }
-        } catch (SocketException e) {
-            throw new RuntimeException(e);
-        }
-        return ip;
-    }
-
     public Socket waitConnection() throws IOException {
         System.out.println("Sessão : " + i++ + "\nWait connection...");
         Socket socket = serverSocket.accept();
@@ -100,7 +52,6 @@ public class BiometricServer {
     }
 
     public static void main(String[] args) {
-        setMainServer();
         login = new Login();
         login.setVisible(true);
         try {
@@ -121,6 +72,7 @@ public class BiometricServer {
                 System.out.println("Cliente finalizado\n");
             }
         } catch (IOException ex) {
+
             Logger.getLogger(TreatAuthentication.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
