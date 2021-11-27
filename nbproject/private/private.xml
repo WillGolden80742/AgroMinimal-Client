@@ -5,19 +5,12 @@
         <group>
             <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/Model/bean/Cripto.java</file>
             <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/Model/bean/Endereco.java</file>
-            <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/Propriedades.java</file>
+            <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/LookAndFeel/LAF.java</file>
             <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/Model/bean/TreatFiles.java</file>
             <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/Model/bean/Device.java</file>
-            <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/SelectorFile.java</file>
-            <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/Model/bean/Cliente.java</file>
             <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/CNPJ.java</file>
-            <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/Login.java</file>
-            <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/TipoSelect.java</file>
             <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/ConnectionFactory/TreatAuthentication.java</file>
-            <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/Adress.java</file>
             <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/Model/bean/Authenticated.java</file>
-            <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/Produtos.java</file>
-            <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/CodePanel.java</file>
             <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/SingUP.java</file>
             <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/util/States.java</file>
             <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/Model/bean/Agrotoxico.java</file>
@@ -25,6 +18,15 @@
             <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/BiometricServer.java</file>
             <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/util/Communication.java</file>
             <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/Model/bean/Propriedade.java</file>
+            <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/Propriedades.java</file>
+            <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/SelectorFile.java</file>
+            <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/Model/bean/Cliente.java</file>
+            <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/Login.java</file>
+            <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/TipoSelect.java</file>
+            <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/Adress.java</file>
+            <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/Produtos.java</file>
+            <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/CodePanel.java</file>
+            <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/ConnectionFactory/ConnectServer.java</file>
             <file>file:/home/will/Documentos/GitHub/AgroMinimal-Cliente/src/View/EditProfile.java</file>
         </group>
     </open-files>

@@ -80,39 +80,4 @@ public class Cripto {
         return textD;
     }
 
-//
-//    public Object toObject(byte[] bytes) {
-//        Object obj = null;
-//        try {
-//            ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-//            ObjectInputStream ois = new ObjectInputStream(bis);
-//            obj = ois.readObject();
-//        } catch (IOException ex) {
-////TODO: Handle the exception
-//        } catch (ClassNotFoundException ex) {
-////TODO: Handle the exception
-//        }
-//        return obj;
-//    }
-//
-//    public byte[] toArrayBytes (Object object) {
-//        byte[] yourBytes = null;
-//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//        ObjectOutputStream out = null;
-//        try {
-//            out = new ObjectOutputStream(bos);
-//            out.writeObject(object);
-//            out.flush();
-//            yourBytes = bos.toByteArray();
-//        } catch (IOException ex) {
-//            Logger.getLogger(Communication.class.getName()).log(Level.SEVERE, null, ex);
-//        } finally {
-//            try {
-//                bos.close();
-//            } catch (IOException ex) {
-//                // ignore close exception
-//            }
-//        }
-//        return yourBytes;
-//    }
 }

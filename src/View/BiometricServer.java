@@ -1,18 +1,10 @@
 package View;
 
 import ConnectionFactory.TreatAuthentication;
-import ConnectionFactory.Server;
 import com.formdev.flatlaf.FlatDarkLaf;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
-import java.util.Enumeration;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;

@@ -30,7 +30,7 @@ public class Communication implements Serializable {
     }
 
     public Object getParam(String chave) {
-        return  params.get(chave);
+        return params.get(chave);
     }
 
     public void setNickName(String nickName) {
