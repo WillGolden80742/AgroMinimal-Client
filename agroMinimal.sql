@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 11/11/2021 às 04:30
--- Versão do servidor: 10.4.21-MariaDB
--- Versão do PHP: 8.0.10
+-- Tempo de geração: 04/01/2022 às 22:45
+-- Versão do servidor: 10.4.22-MariaDB
+-- Versão do PHP: 7.4.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -156,9 +156,10 @@ INSERT INTO `agrotoxicoPropriedade` (`agrotoxicoPropriedadeID`, `propriedade`, `
 (9, 1, 2),
 (10, 1, 5),
 (11, 1, 6),
-(12, 2, 1),
 (13, 4, 3),
-(14, 6, 4);
+(14, 6, 4),
+(15, 2, 1),
+(16, 2, 4);
 
 -- --------------------------------------------------------
 
@@ -180,6 +181,7 @@ CREATE TABLE `arquivos` (
 CREATE TABLE `clientes` (
   `nomeCliente` varchar(20) NOT NULL,
   `nickName` varchar(20) NOT NULL,
+  `level` int(2) NOT NULL,
   `senha` varchar(64) NOT NULL,
   `deviceID` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -188,22 +190,22 @@ CREATE TABLE `clientes` (
 -- Despejando dados para a tabela `clientes`
 --
 
-INSERT INTO `clientes` (`nomeCliente`, `nickName`, `senha`, `deviceID`) VALUES
-('Alyssom', 'ally77', 'a51696a86ebadde170b7b06e83f1ec82', '1'),
-('Based Pepe', 'based_Pepe', '7bb8414eeea88d61ddaa90ab732f1c56', '2'),
-('Гуммо', 'gvmmo', '46de12bf37a60ee1868826fa8b2f6dd4', '15'),
-('HongKong77', 'hong_kong77', '9de6f455f1316788a94e36c6db2dff4e', '3'),
-('Juliana Monique', 'juhMonique', 'dbdf6b52482eeaca1d540116bf42f52a', '4'),
-('Lobo da Estepe', 'LoboDaEstepe', '8e5f96d94b6446e3e9b497cac95d4540', '5'),
-('Logan', 'logan77', '401a66b2ed2ee754683da79537eba83d', '6'),
-('lolo', 'lolo', '8dddc0620fe076293393ad81e3ce86fd', '7'),
-('Marlon', 'marlon77', 'cefdad4bd12e8c57cdf9cf1d176b429a', '8'),
-('Mayumi Sato', 'mayumi_Sato', 'fa9e685425a32079d81f024355066df8', '10'),
-('pco', 'pco_cooperative', '24ebaad6df398839d63f29cb7eb3b971', '11'),
-('Pepe BluePill', 'pepe_bluepill', 'd9002957b34ebefa020cca178bd46739', '12'),
-('Rafael', 'rafa77', 'cbcc887b198ad392cd9f60027f27e37a', '13'),
-('Уильям Голден', 'willGolden', '21f804750eb82c9cde7d38673a6fa235', '6878be4f517024e6949952b684193481'),
-('wololo', 'wololo', '89b44b8b1515dd349cce0b300029c054', '14');
+INSERT INTO `clientes` (`nomeCliente`, `nickName`, `level`, `senha`, `deviceID`) VALUES
+('Alyssom', 'ally77', 0, 'a51696a86ebadde170b7b06e83f1ec82', '1'),
+('Based Pepe', 'based_Pepe', 0, '7bb8414eeea88d61ddaa90ab732f1c56', '2'),
+('Гуммо', 'gvmmo', 0, '46de12bf37a60ee1868826fa8b2f6dd4', '15'),
+('HongKong77', 'hong_kong77', 0, '9de6f455f1316788a94e36c6db2dff4e', '3'),
+('Juliana Monique', 'juhMonique', 0, 'dbdf6b52482eeaca1d540116bf42f52a', '4'),
+('Lobo da Estepe', 'LoboDaEstepe', 0, '8e5f96d94b6446e3e9b497cac95d4540', '5'),
+('Logan', 'logan77', 0, '401a66b2ed2ee754683da79537eba83d', '6'),
+('lolo', 'lolo', 0, '8dddc0620fe076293393ad81e3ce86fd', '7'),
+('Marlon', 'marlon77', 0, 'cefdad4bd12e8c57cdf9cf1d176b429a', '8'),
+('Mayumi Sato', 'mayumi_Sato', 0, 'fa9e685425a32079d81f024355066df8', '10'),
+('pco', 'pco_cooperative', 0, '24ebaad6df398839d63f29cb7eb3b971', '11'),
+('Pepe BluePill', 'pepe_bluepill', 0, 'd9002957b34ebefa020cca178bd46739', '12'),
+('Rafael', 'rafa77', 0, 'cbcc887b198ad392cd9f60027f27e37a', '13'),
+('Уильям Голден', 'willGolden', 1, '21f804750eb82c9cde7d38673a6fa235', '6878be4f517024e6949952b684193481'),
+('wololo', 'wololo', 0, '89b44b8b1515dd349cce0b300029c054', '14');
 
 -- --------------------------------------------------------
 
@@ -2103,6 +2105,25 @@ INSERT INTO `impostos` (`impostoID`, `propriedadeId`, `valor`, `tipo`, `subsidio
 (15, 1, 44, 3, 0, 0, '2021-11-09 22:02:17'),
 (16, 2, 435, 2, 0, 0, '2021-11-09 22:29:48'),
 (17, 7, 435, 4, 100, 0, '2021-11-11 00:21:07');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `produto`
+--
+
+CREATE TABLE `produto` (
+  `propriedadeId` int(20) NOT NULL,
+  `nome` varchar(60) NOT NULL,
+  `producaoAnual` double DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Despejando dados para a tabela `produto`
+--
+
+INSERT INTO `produto` (`propriedadeId`, `nome`, `producaoAnual`) VALUES
+(2, 'uva', 44);
 
 -- --------------------------------------------------------
 
@@ -7786,6 +7807,12 @@ ALTER TABLE `impostos`
   ADD KEY `propriedadeImposto_FK` (`propriedadeId`);
 
 --
+-- Índices de tabela `produto`
+--
+ALTER TABLE `produto`
+  ADD KEY `propriedProdID_FK` (`propriedadeId`);
+
+--
 -- Índices de tabela `profilepicture`
 --
 ALTER TABLE `profilepicture`
@@ -7818,7 +7845,7 @@ ALTER TABLE `agrotoxico`
 -- AUTO_INCREMENT de tabela `agrotoxicoPropriedade`
 --
 ALTER TABLE `agrotoxicoPropriedade`
-  MODIFY `agrotoxicoPropriedadeID` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `agrotoxicoPropriedadeID` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de tabela `impostos`
@@ -7855,6 +7882,12 @@ ALTER TABLE `agrotoxicoPropriedade`
 ALTER TABLE `impostos`
   ADD CONSTRAINT `propriedadeImposto_FK` FOREIGN KEY (`propriedadeId`) REFERENCES `propriedades` (`propriedadeId`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `tipoImposto_FK` FOREIGN KEY (`tipo`) REFERENCES `tipo` (`tipoID`);
+
+--
+-- Restrições para tabelas `produto`
+--
+ALTER TABLE `produto`
+  ADD CONSTRAINT `propriedProdID_FK` FOREIGN KEY (`propriedadeId`) REFERENCES `propriedades` (`propriedadeId`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Restrições para tabelas `profilepicture`
